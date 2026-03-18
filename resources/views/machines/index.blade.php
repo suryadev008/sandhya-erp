@@ -1,10 +1,6 @@
-{{-- ============================================================
-     resources/views/dashboard.blade.php
-     ============================================================ --}}
-
 @extends('layouts.app')
 
-@section('title', config('app.name', 'Sandhya ERP') . ' | Dashboard')
+@section('title', config('app.name', 'Sandhya ERP') . ' | Machines')
 
 @section('content')
 

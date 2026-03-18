@@ -43,8 +43,7 @@ return new class extends Migration
                 ->on('users')
                 ->onDelete('set null');
         });
-
-        // ✅ FIX — पहले column add करो, फिर FK
+        
         Schema::table('users', function (Blueprint $table) {
             $table->unsignedBigInteger('employee_id')->nullable()->after('id'); // ← यह line ADD की
             $table->foreign('employee_id')
