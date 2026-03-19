@@ -29,12 +29,22 @@
   {{-- Page specific styles --}}
   @stack('styles')
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+@php
+    $themeClass = 'hold-transition sidebar-mini layout-fixed';
+    if (auth()->check() && !empty(auth()->user()->theme_settings['body_class'])) {
+        $themeClass = str_replace(
+            ['control-sidebar-slide-open', 'control-sidebar-open'],
+            '',
+            auth()->user()->theme_settings['body_class']
+        );
+    }
+@endphp
+<body class="{{ $themeClass }}">
 <div class="wrapper">
 
   <!-- Preloader -->
   <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}" alt="AdminLTELogo" height="60" width="60">
+    <img class="animation__shake" src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}" alt="Sandhya ERP Logo" height="60" width="60">
   </div>
 
   {{-- ========== NAVBAR ========== --}}
@@ -92,13 +102,56 @@
 <script src="{{ asset('adminlte/plugins/summernote/summernote-bs4.min.js') }}"></script>
 <!-- overlayScrollbars -->
 <script src="{{ asset('adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
-<!-- AdminLTE App -->
+<!-- Sandhya ERP App -->
 <script src="{{ asset('adminlte/dist/js/adminlte.js') }}"></script>
-<!-- AdminLTE for demo purposes -->
+<!-- Sandhya ERP for demo purposes -->
 <script src="{{ asset('adminlte/dist/js/demo.js') }}"></script>
 
 {{-- Page specific scripts --}}
 @stack('scripts')
+
+<script>
+$(document).ready(function() {
+    // Save Theme Settings button click
+    $(document).on('click', '#save-theme-btn', function() {
+        let $btn = $(this);
+        let originalText = $btn.html();
+        $btn.html('<i class="fas fa-spinner fa-spin"></i> Saving...');
+        $btn.prop('disabled', true);
+
+        setTimeout(function() {
+            let bodyClass = $('body').attr('class')
+                .replace('control-sidebar-slide-open', '')
+                .replace('control-sidebar-open', '')
+                .replace(/\s+/g, ' ')
+                .trim();
+            
+            $.ajax({
+                url: '{{ route('theme.settings.update') }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    body_class: bodyClass
+                },
+                success: function(response) {
+                    $btn.html('<i class="fas fa-check"></i> Saved!');
+                    setTimeout(() => {
+                        $btn.html(originalText);
+                        $btn.prop('disabled', false);
+                    }, 2000);
+                },
+                error: function(err) {
+                    $btn.html('<i class="fas fa-times"></i> Failed');
+                    setTimeout(() => {
+                        $btn.html(originalText);
+                        $btn.prop('disabled', false);
+                    }, 2000);
+                }
+            });
+        }, 100); 
+    });
+});
+</script>
 
 </body>
 </html>

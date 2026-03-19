@@ -164,7 +164,7 @@
                     <span class="direct-chat-timestamp float-right">23 Jan 5:37 pm</span>
                   </div>
                   <img class="direct-chat-img" src="{{ asset('adminlte/dist/img/user1-128x128.jpg') }}" alt="message user image">
-                  <div class="direct-chat-text">Working with AdminLTE on a great new app! Wanna join?</div>
+                  <div class="direct-chat-text">Working with Sandhya ERP on a great new app! Wanna join?</div>
                 </div>
 
                 <div class="direct-chat-msg right">
@@ -403,6 +403,6 @@
 @endsection
 
 @push('scripts')
-  <!-- AdminLTE dashboard demo -->
+  <!-- Sandhya ERP dashboard demo -->
   <script src="{{ asset('adminlte/dist/js/pages/dashboard.js') }}"></script>
 @endpush

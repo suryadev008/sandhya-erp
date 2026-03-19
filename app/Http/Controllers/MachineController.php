@@ -4,16 +4,31 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\DataTables\MachineDataTable;
+use App\Models\Machine;
+
+
 class MachineController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    // public function index()
+    // {
+    //     return view('machines.index');
+    // }
+
+
+    public function index(MachineDataTable $dataTable)
     {
+        // AJAX request → JSON return करो
+        if (request()->ajax()) {
+            return $dataTable->ajax();
+        }
+
+        // Normal request → View return करो
         return view('machines.index');
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -57,8 +72,14 @@ class MachineController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+    // public function destroy(string $id)
+    // {
+    // //
+    // }
+
     public function destroy(string $id)
     {
-    //
+        Machine::findOrFail($id)->delete();
+        return response()->json(['success' => true]);
     }
 }
