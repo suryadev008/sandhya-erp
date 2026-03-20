@@ -23,4 +23,15 @@ class Machine extends Model
     {
         return $query->where('is_active', true);
     }
+
+    // Centralized access to Machine Types
+    public static function getMachineTypes()
+    {
+        return [
+            'lathe' => 'Lathe',
+            'cnc' => 'CNC',
+            'drill' => 'Drill',
+            'tap' => 'Tap',
+        ];
+    }
 }

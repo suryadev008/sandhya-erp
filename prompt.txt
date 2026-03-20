@@ -1,0 +1,48 @@
+Objective: Create a complete AJAX CRUD implementation for the MODEL_NAME module in Laravel 11 using Yajra DataTables, AdminLTE 3 UI, and SweetAlert2, exactly mirroring our standard Master Module pattern.
+
+Please follow these strict requirements:
+
+1. DataTables Backend (EmployeesDataTable.php):
+
+Use DataTables::eloquent($query) with ->addIndexColumn().
+Base query must sort by ID descending ($query = Model::query()->orderBy('id', 'desc');).
+Implement a custom is_active where clause filter if request('status') is present and not null.
+The Action column must return two buttons (No <a href> links!):
+Edit Button: <button type="button" class="btn btn-warning btn-sm edit-btn" data-id="[id]" data-toggle="modal" data-target="#edit-module-popup">.
+Delete Button: <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="[id]">.
+2. Controller (EmployeesController.php):
+
+
+index()
+: Return the DataTable via AJAX, else return the index view.
+
+store()
+: Validate incoming data. Create the record. Return JSON: ['success' => true, 'message' => 'Added successfully!'] or 422 with validation errors.
+
+edit($id)
+: Find the record and return JSON: ['success' => true, 'data' => $record].
+
+update(Request, $id)
+: Validate data. Update the record. Return JSON ['success' => true...] or 422.
+
+destroy($id)
+: Delete the record. Return JSON ['success' => true...] or 500 on failure.
+3. Frontend (MODEL_NAME/index.blade.php):
+
+The DataTable <table id="MODEL_NAME-table"> should define order: [] in JS mapping to DT_RowIndex for the 'S.No' column (not ID).
+Status Filter: In DataTables initComplete, inject a 'Status' select dropdown (All/Active/Inactive) as a DOM sibling to #MODEL_NAME-table_length using .after() and add inline-block CSS to prevent it from being destroyed when changing row lengths. Reload datatable on change.
+Modals: Include Add and Edit BootStrap 4 modals with data-backdrop="static" data-keyboard="false".
+Assets: Ensure jquery.validate.min.js and sweetalert2.min.js along with their CSS are included in @push.
+SweetAlert UI:
+Success messages must show a top-end Toast (timer: 4000, timerProgressBar: true, background: '#f4f6f9', iconColor: '#28a745').
+Error messages must use Swal.fire with a dark backdrop overlay (rgba(0,0,123,0.4)), red text, and a custom "Close" button.
+Form Validation & Submit:
+Initialize $('#addEmployeesForm').validate() and $('#editEm ployeesForm').validate() with rules mapping to database columns.
+Both must use submitHandler to perform $.ajax().
+On success: Show Toast, modal('hide'), reset form, and 
+
+DataTable().ajax.reload()
+.
+On error: Show SweetAlert error parsing xhr.responseJSON.errors without closing the modal. Button should show <i class="fas fa-spinner fa-spin"></i> Saving... while loading.
+Edit Flow: .edit-btn click fires GET /MODEL_NAME/[id]/edit. Populate input fields. Add a data-initial-state serialization tracker to the form. Keep the 'Save changes' button disabled until change input detects structural alterations.
+Delete Flow: .delete-btn click triggers a Swal.fire confirm dialog (Are you sure?). On confirm, fire DELETE /MODEL_NAME/[id]. If success, show Toast and reload DataTable.

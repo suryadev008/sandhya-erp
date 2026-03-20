@@ -1,26 +1,28 @@
 @extends('layouts.app')
 
-@section('title', config('app.name') . ' | Machines')
+@section('title', config('app.name') . ' | Parts')
 
 @push('styles')
   <!-- SweetAlert2 -->
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endpush
 
 @section('content')
-
   <div class="content-header">
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0">Machines</h1>
+          <h1 class="m-0">Parts</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
-            <li class="breadcrumb-item active">Machines</li>
+            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+            <li class="breadcrumb-item active">Parts</li>
           </ol>
         </div>
       </div>
@@ -29,77 +31,77 @@
 
   <section class="content">
     <div class="container-fluid">
-
-      {{-- Flash Message --}}
-      @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show">
-          {{ session('success') }}
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-        </div>
-      @endif
-
-      <div class="card">
+      <div class="card card-primary card-outline">
         <div class="card-header">
-          <h3 class="card-title">Machine List</h3>
+          <h3 class="card-title">Part List</h3>
           <div class="card-tools">
             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add-module-popup">
-              <i class="fas fa-plus"></i> Add Machine
+              <i class="fas fa-plus"></i> Add Part
             </button>
           </div>
         </div>
         <div class="card-body">
-          <table id="machines-table" class="table table-bordered table-striped table-hover">
+          <table id="parts-table" class="table table-bordered table-striped table-hover">
             <thead>
               <tr>
                 <th>S.No</th>
-                <th>Machine Name</th>
-                <th>Machine No.</th>
-                <th>Type</th>
+                <th>Company</th>
+                <th>Part Number</th>
+                <th>Part Name</th>
+                <th>Description</th>
                 <th>Status</th>
-                <th class="text-center">Action</th>
+                <th>Action</th>
               </tr>
             </thead>
+            <tbody>
+              <!-- Data populated by DataTables via AJAX -->
+            </tbody>
           </table>
         </div>
       </div>
-
     </div>
 
     {{-- Add Popup Modal --}}
      <div class="modal fade" id="add-module-popup" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Add Machine</h4>
+              <h4 class="modal-title">Add Part</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">  
-              <form id="addMachineForm">
+              <form id="addPartsForm">
                 @csrf
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="machine_name">Machine Name <span class="text-danger">*</span></label>
-                      <input type="text" name="machine_name" id="machine_name" class="form-control" placeholder="Enter Machine Name" required>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="machine_number">Machine Number <span class="text-danger">*</span></label>
-                      <input type="text" name="machine_number" id="machine_number" class="form-control" placeholder="Enter Machine Number" required>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="machine_type">Machine Type <span class="text-danger">*</span></label>
-                      <select name="machine_type" id="machine_type" class="form-control" required>
-                        <option value="">Select Type</option>
-                        @foreach(\App\Models\Machine::getMachineTypes() as $key => $label)
-                          <option value="{{ $key }}">{{ $label }}</option>
+                      <label for="company_id">Company <span class="text-danger">*</span></label>
+                      <select name="company_id" id="company_id" class="form-control" required>
+                        <option value="">Select Company</option>
+                        @foreach($companies as $company)
+                            <option value="{{ $company->id }}">{{ $company->company_name }}</option>
                         @endforeach
                       </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="part_number">Part Number <span class="text-danger">*</span></label>
+                      <input type="text" name="part_number" id="part_number" class="form-control" placeholder="Enter Part Number" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="part_name">Part Name</label>
+                      <input type="text" name="part_name" id="part_name" class="form-control" placeholder="Enter Part Name">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="description">Description</label>
+                      <textarea name="description" id="description" class="form-control" placeholder="Enter Description"></textarea>
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -116,53 +118,56 @@
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="submit" form="addMachineForm" class="btn btn-primary">Save changes</button>
+              <button type="submit" form="addPartsForm" class="btn btn-primary">Save changes</button>
             </div>
           </div>
-          <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
       </div>
       {{-- End Add popup Modal --}}
 
-      
-    {{-- edit popup Modal --}}
+    {{-- Edit popup Modal --}}
      <div class="modal fade" id="edit-module-popup" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Edit Machine</h4>
+              <h4 class="modal-title">Edit Part</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">  
-              <form id="editMachineForm">
+              <form id="editPartsForm">
                 @csrf
                 @method('PUT')
-                <input type="hidden" name="id" id="edit_machine_id">
+                <input type="hidden" name="id" id="edit_part_id">
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="edit_machine_name">Machine Name <span class="text-danger">*</span></label>
-                      <input type="text" name="machine_name" id="edit_machine_name" class="form-control" placeholder="Enter Machine Name" required>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="edit_machine_number">Machine Number <span class="text-danger">*</span></label>
-                      <input type="text" name="machine_number" id="edit_machine_number" class="form-control" placeholder="Enter Machine Number" required>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="edit_machine_type">Machine Type <span class="text-danger">*</span></label>
-                      <select name="machine_type" id="edit_machine_type" class="form-control" required>
-                        <option value="">Select Type</option>
-                        @foreach(\App\Models\Machine::getMachineTypes() as $key => $label)
-                          <option value="{{ $key }}">{{ $label }}</option>
+                      <label for="edit_company_id">Company <span class="text-danger">*</span></label>
+                      <select name="company_id" id="edit_company_id" class="form-control" required>
+                        <option value="">Select Company</option>
+                        @foreach($companies as $company)
+                            <option value="{{ $company->id }}">{{ $company->company_name }}</option>
                         @endforeach
                       </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="edit_part_number">Part Number <span class="text-danger">*</span></label>
+                      <input type="text" name="part_number" id="edit_part_number" class="form-control" placeholder="Enter Part Number" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="edit_part_name">Part Name</label>
+                      <input type="text" name="part_name" id="edit_part_name" class="form-control" placeholder="Enter Part Name">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="edit_description">Description</label>
+                      <textarea name="description" id="edit_description" class="form-control" placeholder="Enter Description"></textarea>
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -179,20 +184,19 @@
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="submit" form="editMachineForm" id="editSaveBtn" class="btn btn-primary" disabled>Save changes</button>
+              <button type="submit" form="editPartsForm" id="editSaveBtn" class="btn btn-primary" disabled>Save changes</button>
             </div>
           </div>
-          <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
       </div>
       {{-- End popup Modal --}}
 
   </section>
-
 @endsection
 
 @push('scripts')
+  <!-- Select2 -->
+  <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
   <!-- jQuery Validation -->
   <script src="{{ asset('adminlte/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
   <script src="{{ asset('adminlte/plugins/jquery-validation/additional-methods.min.js') }}"></script>
@@ -205,81 +209,88 @@
 
   <script>
     $(function () {
-      $('#machines-table').DataTable({
+      // Initialize Select2 for Add modal
+      $('#company_id').select2({
+        theme: 'bootstrap4',
+        placeholder: 'Search Company...',
+        allowClear: true,
+        dropdownParent: $('#add-module-popup')
+      });
+
+      // Initialize Select2 for Edit modal
+      $('#edit_company_id').select2({
+        theme: 'bootstrap4',
+        placeholder: 'Search Company...',
+        allowClear: true,
+        dropdownParent: $('#edit-module-popup')
+      });
+
+      // Reset Select2 when Add modal closes
+      $('#add-module-popup').on('hidden.bs.modal', function () {
+        $('#company_id').val('').trigger('change');
+      });
+
+      $('#parts-table').DataTable({
         processing: true,
         serverSide: true,
         responsive: true,
         order: [],
         ajax: {
-          url: '{{ route('machines.index') }}',
+          url: '{{ route('parts.index') }}',
           data: function (d) {
-            d.status = $('#status-filter').val();
-            d.type   = $('#type-filter').val();
+            d.status     = $('#status-filter').val();
+            d.company_id = $('#company-filter').val();
           }
         },
         columns: [
-          { data: 'DT_RowIndex',    name: 'DT_RowIndex', orderable: false, searchable: false },
-          { data: 'machine_name',   name: 'machine_name' },
-          { data: 'machine_number', name: 'machine_number' },
-          { data: 'machine_type',   name: 'machine_type' },
-          { data: 'is_active',      name: 'is_active' },
-          { data: 'action',         name: 'action', orderable: false, searchable: false },
+          { data: 'DT_RowIndex',  name: 'DT_RowIndex', orderable: false, searchable: false },
+          { data: 'company_name', name: 'company.company_name' },
+          { data: 'part_number',  name: 'part_number' },
+          { data: 'part_name',    name: 'part_name' },
+          { data: 'description',  name: 'description' },
+          { data: 'is_active',    name: 'is_active' },
+          { data: 'action',       name: 'action', orderable: false, searchable: false },
         ],
         initComplete: function () {
+          var companyOptions = '<option value="">All</option>';
+          @foreach($companies as $company)
+            companyOptions += '<option value="{{ $company->id }}">{{ addslashes($company->company_name) }}</option>';
+          @endforeach
+
           var filterHtml =
             '<span class="d-inline-block ml-3"><label>Status:&nbsp;<select id="status-filter" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option><option value="1">Active</option><option value="0">Inactive</option></select></label></span>' +
-            '<span class="d-inline-block ml-3"><label>Type:&nbsp;<select id="type-filter" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option>@foreach(\App\Models\Machine::getMachineTypes() as $key => $label)<option value="{{ $key }}">{{ $label }}</option>@endforeach</select></label></span>' +
+            '<span class="d-inline-block ml-3"><label>Company:&nbsp;<select id="company-filter" class="custom-select custom-select-sm form-control form-control-sm" style="max-width:200px">' + companyOptions + '</select></label></span>' +
             '<span class="d-inline-block ml-2"><button id="clear-filters" class="btn btn-sm btn-outline-secondary" title="Clear Filters"><i class="fas fa-times"></i> Clear</button></span>';
 
-          $('#machines-table_length').css('display', 'inline-block');
-          $('#machines-table_length').after(filterHtml);
+          $('#parts-table_length').css('display', 'inline-block');
+          $('#parts-table_length').after(filterHtml);
 
-          $('#status-filter, #type-filter').on('change', function () {
-            $('#machines-table').DataTable().ajax.reload();
+          $('#status-filter, #company-filter').on('change', function () {
+            $('#parts-table').DataTable().ajax.reload();
           });
 
           $('#clear-filters').on('click', function () {
             $('#status-filter').val('');
-            $('#type-filter').val('');
-            $('#machines-table').DataTable().search('').ajax.reload();
+            $('#company-filter').val('');
+            $('#parts-table').DataTable().search('').ajax.reload();
           });
         }
       });
     });
 
-    // Delete Machine
-    $(document).on('click', '.delete-btn', function () {
-      let id = $(this).data('id');
-      
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#dc3545',
-        cancelButtonColor: '#6c757d',
-        confirmButtonText: '<i class="fas fa-trash"></i> Yes, delete it!'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          $.ajax({
-            url: '/machines/' + id,
-            type: 'DELETE',
-            data: { _token: '{{ csrf_token() }}' },
-            success: function (response) {
-              if(response.success) {
-                Toast.fire({
-                  icon: 'success',
-                  title: response.message
-                });
-                $('#machines-table').DataTable().ajax.reload();
-              }
-            },
-            error: function (xhr) {
-              Swal.fire('Error!', 'Something went wrong while deleting.', 'error');
-            }
-          });
-        }
-      });
+    // jQuery Validation Defaults
+    $.validator.setDefaults({
+      errorElement: 'span',
+      errorPlacement: function (error, element) {
+        error.addClass('invalid-feedback');
+        element.closest('.form-group').append(error);
+      },
+      highlight: function (element, errorClass, validClass) {
+        $(element).addClass('is-invalid');
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        $(element).removeClass('is-invalid');
+      }
     });
 
     // SweetAlert2 Toast configuration
@@ -300,32 +311,15 @@
       }
     });
 
-    // jQuery Validation Defaults
-    $.validator.setDefaults({
-      errorElement: 'span',
-      errorPlacement: function (error, element) {
-        error.addClass('invalid-feedback');
-        element.closest('.form-group').append(error);
-      },
-      highlight: function (element, errorClass, validClass) {
-        $(element).addClass('is-invalid');
-      },
-      unhighlight: function (element, errorClass, validClass) {
-        $(element).removeClass('is-invalid');
-      }
-    });
-
-    // Add Machine Validation
-    $('#addMachineForm').validate({
+    // Add Part Validation
+    $('#addPartsForm').validate({
       rules: {
-        machine_name: { required: true, maxlength: 255 },
-        machine_number: { required: true, maxlength: 255 },
-        machine_type: { required: true }
+        company_id: { required: true },
+        part_number: { required: true, maxlength: 100 }
       },
       messages: {
-        machine_name: { required: "Please enter a machine name." },
-        machine_number: { required: "Please enter a machine number." },
-        machine_type: { required: "Please select a machine type." }
+        company_id: { required: "Please select a company." },
+        part_number: { required: "Please enter a part number." }
       },
       submitHandler: function (form, e) {
         e.preventDefault();
@@ -335,7 +329,7 @@
         submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
 
         $.ajax({
-          url: '{{ route('machines.store') }}',
+          url: '{{ route('parts.store') }}',
           type: 'POST',
           data: $(form).serialize(),
           success: function (response) {
@@ -348,7 +342,7 @@
               });
               $('#add-module-popup').modal('hide');
               form.reset();
-              $('#machines-table').DataTable().ajax.reload();
+              $('#parts-table').DataTable().ajax.reload();
             }
           },
           error: function (xhr) {
@@ -375,39 +369,38 @@
       }
     });
 
-    // Populate Edit Machine Form
+    // Populate Edit Form
     $(document).on('click', '.edit-btn', function() {
       let id = $(this).data('id');
       
-      // Reset form and disable submit button initially
-      $('#editMachineForm')[0].reset();
+      $('#editPartsForm')[0].reset();
       $('#editSaveBtn').prop('disabled', true);
-      $('#editMachineForm').data('initial-state', '');
+      $('#editPartsForm').data('initial-state', '');
 
       $.ajax({
-        url: '/machines/' + id + '/edit',
+        url: '/parts/' + id + '/edit',
         type: 'GET',
         success: function(response) {
           if(response.success) {
             let data = response.data;
-            $('#edit_machine_id').val(data.id);
-            $('#edit_machine_name').val(data.machine_name);
-            $('#edit_machine_number').val(data.machine_number);
-            $('#edit_machine_type').val(data.machine_type);
+            $('#edit_part_id').val(data.id);
+            $('#edit_company_id').val(data.company_id).trigger('change'); // trigger Select2 UI update
+            $('#edit_part_number').val(data.part_number);
+            $('#edit_part_name').val(data.part_name);
+            $('#edit_description').val(data.description);
             $('#edit_is_active').prop('checked', data.is_active ? true : false);
             
-            // Store initial state to compare later
-            $('#editMachineForm').data('initial-state', $('#editMachineForm').serialize());
+            $('#editPartsForm').data('initial-state', $('#editPartsForm').serialize());
           }
         },
         error: function(err) {
-          Swal.fire('Error', 'Failed to fetch machine data', 'error');
+          Swal.fire('Error', 'Failed to fetch data', 'error');
         }
       });
     });
 
     // Detect form changes to enable Save button
-    $('#editMachineForm').on('change input', function() {
+    $('#editPartsForm').on('change input', function() {
       let currentState = $(this).serialize();
       let initialState = $(this).data('initial-state');
       if (currentState !== initialState && initialState !== '') {
@@ -417,33 +410,30 @@
       }
     });
 
-    // Edit Machine Form AJAX Submit Validation
-    $('#editMachineForm').validate({
+    // Edit Form AJAX Submit Validation
+    $('#editPartsForm').validate({
       rules: {
-        machine_name: { required: true, maxlength: 255 },
-        machine_number: { required: true, maxlength: 255 },
-        machine_type: { required: true }
+        company_id: { required: true },
+        part_number: { required: true, maxlength: 100 }
       },
       messages: {
-        machine_name: { required: "Please enter a machine name." },
-        machine_number: { required: "Please enter a machine number." },
-        machine_type: { required: "Please select a machine type." }
+        company_id: { required: "Please select a company." },
+        part_number: { required: "Please enter a part number." }
       },
       submitHandler: function (form, e) {
         e.preventDefault();
         
         let submitBtn = $('#editSaveBtn');
         let originalText = submitBtn.html();
-        let id = $('#edit_machine_id').val();
+        let id = $('#edit_part_id').val();
         
         submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
 
         $.ajax({
-          url: '/machines/' + id,
+          url: '/parts/' + id,
           type: 'POST', // Form specifies @method('PUT') inside
           data: $(form).serialize(),
           success: function (response) {
-            // Keep it disabled after save
             submitBtn.html(originalText).prop('disabled', true);
             
             if (response.success) {
@@ -453,7 +443,7 @@
               });
               $('#edit-module-popup').modal('hide');
               $(form).data('initial-state', $(form).serialize());
-              $('#machines-table').DataTable().ajax.reload();
+              $('#parts-table').DataTable().ajax.reload();
             }
           },
           error: function (xhr) {
@@ -478,6 +468,41 @@
           }
         });
       }
+    });
+
+    // Delete
+    $(document).on('click', '.delete-btn', function () {
+      let id = $(this).data('id');
+      
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: '<i class="fas fa-trash"></i> Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: '/parts/' + id,
+            type: 'DELETE',
+            data: { _token: '{{ csrf_token() }}' },
+            success: function (response) {
+              if(response.success) {
+                Toast.fire({
+                  icon: 'success',
+                  title: response.message
+                });
+                $('#parts-table').DataTable().ajax.reload();
+              }
+            },
+            error: function (xhr) {
+              Swal.fire('Error!', 'Something went wrong.', 'error');
+            }
+          });
+        }
+      });
     });
   </script>
 @endpush

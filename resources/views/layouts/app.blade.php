@@ -125,7 +125,7 @@ $(document).ready(function() {
                 .replace('control-sidebar-open', '')
                 .replace(/\s+/g, ' ')
                 .trim();
-            
+
             $.ajax({
                 url: '{{ route('theme.settings.update') }}',
                 method: 'POST',
@@ -148,7 +148,7 @@ $(document).ready(function() {
                     }, 2000);
                 }
             });
-        }, 100); 
+        }, 100);
     });
 });
 </script>
