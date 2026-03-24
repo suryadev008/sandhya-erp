@@ -93,7 +93,7 @@ resources/views/lathe_productions/create.blade.php
                 <label for="date">Date <span class="text-danger">*</span></label>
                 <input type="date" name="date" id="date"
                   class="form-control @error('date') is-invalid @enderror"
-                  value="{{ old('date', date('Y-m-d')) }}"
+                  value="{{ old('date') }}"
                   max="{{ date('Y-m-d') }}"
                   required>
                 @error('date')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -138,9 +138,9 @@ resources/views/lathe_productions/create.blade.php
 
       {{-- ===== Work Rows Section ===== --}}
       <div class="card card-warning card-outline">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h3 class="card-title"><i class="fas fa-list mr-1"></i> Work Details</h3>
-          <button type="button" class="btn btn-sm btn-success" id="addRowBtn">
+        <div class="card-header d-flex align-items-center">
+          <h3 class="card-title mb-0"><i class="fas fa-list mr-1"></i> Work Details</h3>
+          <button type="button" class="btn btn-sm btn-success ml-auto" id="addRowBtn">
             <i class="fas fa-plus"></i> Add Row
           </button>
         </div>
@@ -210,11 +210,8 @@ resources/views/lathe_productions/create.blade.php
     </td>
 
     <td>
-      <select name="rows[__IDX__][operation_id]" class="form-control form-control-sm operation-select" required>
-        <option value="">-- Operation --</option>
-        @foreach($operations as $op)
-          <option value="{{ $op->id }}" data-price="{{ $op->price }}">{{ $op->operation_name }}</option>
-        @endforeach
+      <select name="rows[__IDX__][operation_id]" class="form-control form-control-sm operation-select" required disabled>
+        <option value="">-- Select Company First --</option>
       </select>
     </td>
 
@@ -258,16 +255,16 @@ $(document).ready(function () {
   // Init Select2 for header fields
   $('#employee_id, #machine_id').select2({ theme: 'bootstrap4', width: '100%' });
 
-  // Parts AJAX URL
-  var partsUrl = '{{ route('lathe-productions.parts-by-company') }}';
+  var _base         = window.location.origin;
+  var partsUrl      = _base + '{{ parse_url(route('lathe-productions.parts-by-company'), PHP_URL_PATH) }}';
+  var operationsUrl = _base + '{{ parse_url(route('lathe-productions.operations-by-company'), PHP_URL_PATH) }}';
+  var rateUrl       = _base + '{{ parse_url(route('lathe-productions.operation-rate'), PHP_URL_PATH) }}';
 
   // ── Add first row on load ──────────────────────────────────────────
   addRow();
 
   // ── Add Row Button ─────────────────────────────────────────────────
-  $('#addRowBtn').on('click', function () {
-    addRow();
-  });
+  $('#addRowBtn').on('click', addRow);
 
   // ── Delete Row ─────────────────────────────────────────────────────
   $(document).on('click', '.delete-row-btn', function () {
@@ -280,19 +277,31 @@ $(document).ready(function () {
     updateGrandTotal();
   });
 
-  // ── Company Change → Load Parts ────────────────────────────────────
+  // ── Company Change → Load Parts + Operations ───────────────────────
   $(document).on('change', '.company-select', function () {
-    var $row       = $(this).closest('tr.prod-row');
-    var $partSel   = $row.find('.part-select');
-    var companyId  = $(this).val();
+    var $row      = $(this).closest('tr.prod-row');
+    var companyId = $(this).val();
 
+    var $partSel = $row.find('.part-select');
+    var $opSel   = $row.find('.operation-select');
+
+    // Reset parts
     $partSel.prop('disabled', true).html('<option value="">Loading...</option>');
+    // Reset operations
+    $opSel.prop('disabled', true).html('<option value="">Loading...</option>');
+    // Reset rate/amount
+    $row.find('.rate-display').text('0.00');
+    $row.find('.rate-hidden').val(0);
+    $row.find('.amount-display').text('0.00');
+    updateGrandTotal();
 
     if (!companyId) {
       $partSel.html('<option value="">-- Select Company First --</option>');
+      $opSel.html('<option value="">-- Select Company First --</option>');
       return;
     }
 
+    // Load parts
     $.getJSON(partsUrl, { company_id: companyId }, function (parts) {
       var opts = '<option value="">-- Part No. --</option>';
       $.each(parts, function (i, p) {
@@ -302,16 +311,63 @@ $(document).ready(function () {
     }).fail(function () {
       $partSel.html('<option value="">-- Error loading parts --</option>').prop('disabled', false);
     });
+
+    // Load operations
+    $.getJSON(operationsUrl, { company_id: companyId }, function (ops) {
+      var opts = '<option value="">-- Operation --</option>';
+      $.each(ops, function (i, op) {
+        opts += '<option value="' + op.id + '">' + op.operation_name + '</option>';
+      });
+      $opSel.html(opts).prop('disabled', false);
+    }).fail(function () {
+      $opSel.html('<option value="">-- Error loading operations --</option>').prop('disabled', false);
+    });
   });
 
-  // ── Operation Change → Show Rate, Recalc Amount ────────────────────
+  // ── Operation Change → Fetch Rate via AJAX ────────────────────────
   $(document).on('change', '.operation-select', function () {
-    var $row   = $(this).closest('tr.prod-row');
-    var price  = parseFloat($(this).find(':selected').data('price')) || 0;
-    $row.find('.rate-display').text(price.toFixed(2));
-    $row.find('.rate-hidden').val(price);
-    calcRowAmount($row);
-    updateGrandTotal();
+    var $row        = $(this).closest('tr.prod-row');
+    var operationId = $(this).val();
+    var date        = $('#date').val();
+
+    if (!operationId) {
+      $row.find('.rate-display').text('0.00');
+      $row.find('.rate-hidden').val(0);
+      calcRowAmount($row);
+      updateGrandTotal();
+      return;
+    }
+
+    $.getJSON(rateUrl, { operation_id: operationId, date: date }, function (res) {
+      var rate = parseFloat(res.rate) || 0;
+      $row.find('.rate-display').text(rate.toFixed(2));
+      $row.find('.rate-hidden').val(rate);
+      calcRowAmount($row);
+      updateGrandTotal();
+    }).fail(function () {
+      $row.find('.rate-display').text('0.00');
+      $row.find('.rate-hidden').val(0);
+      calcRowAmount($row);
+      updateGrandTotal();
+    });
+  });
+
+  // ── Date Change → Re-fetch Rates for All Rows ────────────────────
+  $('#date').on('change', function () {
+    var date = $(this).val();
+    $('#rowsBody .prod-row').each(function () {
+      var $row        = $(this);
+      var operationId = $row.find('.operation-select').val();
+      if (!operationId) return;
+
+      $.getJSON(rateUrl, { operation_id: operationId, date: date }, function (res) {
+        var rate = parseFloat(res.rate) || 0;
+        $row.find('.rate-display').text(rate.toFixed(2));
+        $row.find('.rate-hidden').val(rate);
+        calcRowAmount($row);
+        updateGrandTotal();
+      });
+    });
   });
 
   // ── Qty Change → Recalc Amount ─────────────────────────────────────
@@ -337,16 +393,12 @@ $(document).ready(function () {
   var rowCounter = 0;
 
   function addRow() {
-    var template  = document.getElementById('rowTemplate');
-    var clone     = document.importNode(template.content, true);
-    var $tr       = $(clone).find('tr');
-
-    // Replace index placeholder with unique counter
-    var html = $tr[0].outerHTML.replace(/__IDX__/g, rowCounter);
+    var template = document.getElementById('rowTemplate');
+    var clone    = document.importNode(template.content, true);
+    var $tr      = $(clone).find('tr');
+    var html     = $tr[0].outerHTML.replace(/__IDX__/g, rowCounter);
     rowCounter++;
-
-    var $newRow = $(html);
-    $('#rowsBody').append($newRow);
+    $('#rowsBody').append($(html));
     reindexRows();
   }
 
@@ -359,8 +411,7 @@ $(document).ready(function () {
   function calcRowAmount($row) {
     var rate   = parseFloat($row.find('.rate-hidden').val()) || 0;
     var qty    = parseInt($row.find('.qty-input').val())     || 0;
-    var amount = rate * qty;
-    $row.find('.amount-display').text(amount.toFixed(2));
+    $row.find('.amount-display').text((rate * qty).toFixed(2));
   }
 
   function updateGrandTotal() {

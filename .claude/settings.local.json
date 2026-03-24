@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(php artisan:*)"
+      "Bash(php artisan:*)",
+      "Bash(php -r \":*)",
+      "Bash(composer require:*)",
+      "Bash(php -r \"require ''vendor/autoload.php''; echo class_exists\\(''Barryvdh\\\\DomPDF\\\\Facade\\\\Pdf''\\) ? ''dompdf: YES'' : ''dompdf: NO'';\")"
     ]
   }
 }

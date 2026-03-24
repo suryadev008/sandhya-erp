@@ -378,7 +378,7 @@
       $('#editPartsForm').data('initial-state', '');
 
       $.ajax({
-        url: '/parts/' + id + '/edit',
+        url: '/master/parts/' + id + '/edit',
         type: 'GET',
         success: function(response) {
           if(response.success) {
@@ -430,7 +430,7 @@
         submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
 
         $.ajax({
-          url: '/parts/' + id,
+          url: '/master/parts/' + id,
           type: 'POST', // Form specifies @method('PUT') inside
           data: $(form).serialize(),
           success: function (response) {
@@ -485,7 +485,7 @@
       }).then((result) => {
         if (result.isConfirmed) {
           $.ajax({
-            url: '/parts/' + id,
+            url: '/master/parts/' + id,
             type: 'DELETE',
             data: { _token: '{{ csrf_token() }}' },
             success: function (response) {

@@ -66,11 +66,7 @@
         type: 'GET',
         success: function (res) {
           let rows = res.data.map(function (emp, i) {
-            let statusBadge = {
-              active: '<span class="badge badge-success">Active</span>',
-              inactive: '<span class="badge badge-secondary">Inactive</span>',
-              terminated: '<span class="badge badge-danger">Terminated</span>',
-            }[emp.status] || '';
+            let statusText = emp.status ? emp.status.charAt(0).toUpperCase() + emp.status.slice(1) : '';
 
             let nameLink = '<a href="/master/employees/' + emp.id + '">' + emp.name + '</a>';
             let codeLink = '<a href="/master/employees/' + emp.id + '">' + emp.emp_code + '</a>';
@@ -84,14 +80,14 @@
               emp.per_month ? '₹ ' + emp.per_month : '<span class="text-muted">—</span>',
               emp.effect_from || '<span class="text-muted">—</span>',
               emp.remark || '<span class="text-muted">—</span>',
-              statusBadge,
+              statusText,
             ];
           });
 
           $('#salaries-table').DataTable({
             data: rows,
             responsive: true,
-            order: [[2, 'asc']],
+            order: [[1, 'asc']],
             columnDefs: [
               { orderable: false, targets: [0] },
             ],

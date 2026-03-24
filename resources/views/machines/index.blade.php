@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endpush
 
 @section('content')
@@ -93,11 +96,11 @@
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="machine_type">Machine Type <span class="text-danger">*</span></label>
-                      <select name="machine_type" id="machine_type" class="form-control" required>
+                      <label for="machine_type_id">Machine Type <span class="text-danger">*</span></label>
+                      <select name="machine_type_id" id="machine_type_id" class="form-control select2-type" required>
                         <option value="">Select Type</option>
-                        @foreach(\App\Models\Machine::getMachineTypes() as $key => $label)
-                          <option value="{{ $key }}">{{ $label }}</option>
+                        @foreach($machineTypes as $type)
+                          <option value="{{ $type->id }}">{{ $type->type_name }}</option>
                         @endforeach
                       </select>
                     </div>
@@ -156,11 +159,11 @@
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="edit_machine_type">Machine Type <span class="text-danger">*</span></label>
-                      <select name="machine_type" id="edit_machine_type" class="form-control" required>
+                      <label for="edit_machine_type_id">Machine Type <span class="text-danger">*</span></label>
+                      <select name="machine_type_id" id="edit_machine_type_id" class="form-control select2-type" required>
                         <option value="">Select Type</option>
-                        @foreach(\App\Models\Machine::getMachineTypes() as $key => $label)
-                          <option value="{{ $key }}">{{ $label }}</option>
+                        @foreach($machineTypes as $type)
+                          <option value="{{ $type->id }}">{{ $type->type_name }}</option>
                         @endforeach
                       </select>
                     </div>
@@ -202,9 +205,29 @@
   <script src="{{ asset('adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
   <script src="{{ asset('adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
   <script src="{{ asset('adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+  <!-- Select2 -->
+  <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
 
   <script>
     $(function () {
+      // Init Select2 for Machine Type (Add & Edit modals)
+      $('#machine_type_id').select2({
+        theme: 'bootstrap4',
+        placeholder: 'Search Type...',
+        dropdownParent: $('#add-module-popup')
+      });
+
+      $('#edit_machine_type_id').select2({
+        theme: 'bootstrap4',
+        placeholder: 'Search Type...',
+        dropdownParent: $('#edit-module-popup')
+      });
+
+      // Reset Select2 on Add modal close
+      $('#add-module-popup').on('hidden.bs.modal', function () {
+        $('#machine_type_id').val(null).trigger('change');
+      });
+
       $('#machines-table').DataTable({
         processing: true,
         serverSide: true,
@@ -221,14 +244,14 @@
           { data: 'DT_RowIndex',    name: 'DT_RowIndex', orderable: false, searchable: false },
           { data: 'machine_name',   name: 'machine_name' },
           { data: 'machine_number', name: 'machine_number' },
-          { data: 'machine_type',   name: 'machine_type' },
+          { data: 'machine_type_id', name: 'machine_type_id', searchable: false },
           { data: 'is_active',      name: 'is_active' },
           { data: 'action',         name: 'action', orderable: false, searchable: false },
         ],
         initComplete: function () {
           var filterHtml =
             '<span class="d-inline-block ml-3"><label>Status:&nbsp;<select id="status-filter" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option><option value="1">Active</option><option value="0">Inactive</option></select></label></span>' +
-            '<span class="d-inline-block ml-3"><label>Type:&nbsp;<select id="type-filter" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option>@foreach(\App\Models\Machine::getMachineTypes() as $key => $label)<option value="{{ $key }}">{{ $label }}</option>@endforeach</select></label></span>' +
+            '<span class="d-inline-block ml-3"><label>Type:&nbsp;<select id="type-filter" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option>@foreach($machineTypes as $type)<option value="{{ $type->id }}">{{ $type->type_name }}</option>@endforeach</select></label></span>' +
             '<span class="d-inline-block ml-2"><button id="clear-filters" class="btn btn-sm btn-outline-secondary" title="Clear Filters"><i class="fas fa-times"></i> Clear</button></span>';
 
           $('#machines-table_length').css('display', 'inline-block');
@@ -262,7 +285,7 @@
       }).then((result) => {
         if (result.isConfirmed) {
           $.ajax({
-            url: '/machines/' + id,
+            url: '/master/machines/' + id,
             type: 'DELETE',
             data: { _token: '{{ csrf_token() }}' },
             success: function (response) {
@@ -320,12 +343,12 @@
       rules: {
         machine_name: { required: true, maxlength: 255 },
         machine_number: { required: true, maxlength: 255 },
-        machine_type: { required: true }
+        machine_type_id: { required: true }
       },
       messages: {
-        machine_name: { required: "Please enter a machine name." },
-        machine_number: { required: "Please enter a machine number." },
-        machine_type: { required: "Please select a machine type." }
+        machine_name:    { required: "Please enter a machine name." },
+        machine_number:  { required: "Please enter a machine number." },
+        machine_type_id: { required: "Please select a machine type." }
       },
       submitHandler: function (form, e) {
         e.preventDefault();
@@ -385,7 +408,7 @@
       $('#editMachineForm').data('initial-state', '');
 
       $.ajax({
-        url: '/machines/' + id + '/edit',
+        url: '/master/machines/' + id + '/edit',
         type: 'GET',
         success: function(response) {
           if(response.success) {
@@ -393,7 +416,7 @@
             $('#edit_machine_id').val(data.id);
             $('#edit_machine_name').val(data.machine_name);
             $('#edit_machine_number').val(data.machine_number);
-            $('#edit_machine_type').val(data.machine_type);
+            $('#edit_machine_type_id').val(data.machine_type_id).trigger('change');
             $('#edit_is_active').prop('checked', data.is_active ? true : false);
             
             // Store initial state to compare later
@@ -422,16 +445,16 @@
       rules: {
         machine_name: { required: true, maxlength: 255 },
         machine_number: { required: true, maxlength: 255 },
-        machine_type: { required: true }
+        machine_type_id: { required: true }
       },
       messages: {
-        machine_name: { required: "Please enter a machine name." },
-        machine_number: { required: "Please enter a machine number." },
-        machine_type: { required: "Please select a machine type." }
+        machine_name:    { required: "Please enter a machine name." },
+        machine_number:  { required: "Please enter a machine number." },
+        machine_type_id: { required: "Please select a machine type." }
       },
       submitHandler: function (form, e) {
         e.preventDefault();
-        
+
         let submitBtn = $('#editSaveBtn');
         let originalText = submitBtn.html();
         let id = $('#edit_machine_id').val();
@@ -439,7 +462,7 @@
         submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
 
         $.ajax({
-          url: '/machines/' + id,
+          url: '/master/machines/' + id,
           type: 'POST', // Form specifies @method('PUT') inside
           data: $(form).serialize(),
           success: function (response) {

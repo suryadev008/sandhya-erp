@@ -4,13 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Machine extends Model
+class MachineType extends Model
 {
     protected $fillable = [
-        'machine_name',
-        'machine_number',
-        'machine_type_id',
-        'description',
+        'type_name',
+        'remark',
         'is_active',
     ];
 
@@ -23,8 +21,8 @@ class Machine extends Model
         return $query->where('is_active', true);
     }
 
-    public function machineType()
+    public function machines()
     {
-        return $this->belongsTo(MachineType::class);
+        return $this->hasMany(Machine::class);
     }
 }

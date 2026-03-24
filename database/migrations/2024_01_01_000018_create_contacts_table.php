@@ -8,11 +8,13 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('operations', function (Blueprint $table) {
+        Schema::create('contacts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained('companies')->restrictOnDelete();
-            $table->string('operation_name');
-            $table->enum('applicable_for', ['lathe', 'cnc', 'both'])->default('lathe');
+            $table->foreignId('company_id')->nullable()->constrained('companies')->nullOnDelete();
+            $table->string('name');
+            $table->string('phone', 50);
+            $table->string('email', 100)->nullable();
+            $table->string('designation', 100)->nullable();
             $table->text('remark')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
@@ -21,6 +23,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('operations');
+        Schema::dropIfExists('contacts');
     }
 };

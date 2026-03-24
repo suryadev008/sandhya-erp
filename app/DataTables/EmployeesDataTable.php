@@ -25,13 +25,7 @@ class EmployeesDataTable
                 return '<a href="' . route('employees.show', $emp->id) . '">' . e($emp->name) . '</a>';
             })
             ->editColumn('status', function ($emp) {
-                $colors = [
-                    'active'     => 'success',
-                    'inactive'   => 'secondary',
-                    'terminated' => 'danger',
-                ];
-                $color = $colors[$emp->status] ?? 'secondary';
-                return '<span class="badge badge-' . $color . '">' . ucfirst($emp->status) . '</span>';
+                return ucfirst($emp->status);
             })
             ->editColumn('employee_type', function ($emp) {
                 return ucfirst($emp->employee_type);
@@ -46,7 +40,7 @@ class EmployeesDataTable
                     </button>
                 ';
             })
-            ->rawColumns(['emp_code', 'name', 'action', 'status'])
+            ->rawColumns(['emp_code', 'name', 'action'])
             ->toJson();
     }
 }

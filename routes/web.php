@@ -33,13 +33,15 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth'])->prefix('master')->group(function () {
 
     // require __DIR__ . '/modules/dashboard.php';
+    require __DIR__ . '/modules/machine_types.php';
     require __DIR__ . '/modules/machines.php';
     require __DIR__ . '/modules/operations.php';
     require __DIR__ . '/modules/parts.php';
     require __DIR__ . '/modules/companies.php';
+    require __DIR__ . '/modules/contacts.php';
     require __DIR__ . '/modules/employees.php';
     require __DIR__ . '/modules/salaries.php';
-// require __DIR__ . '/modules/payrolls.php';
+    require __DIR__ . '/modules/payrolls.php';
 
 });
 

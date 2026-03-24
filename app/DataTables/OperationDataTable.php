@@ -3,21 +3,13 @@
 namespace App\DataTables;
 
 use App\Models\Operation;
-use Illuminate\Database\Eloquent\Builder as QueryBuilder;
-use Yajra\DataTables\EloquentDataTable;
-use Yajra\DataTables\Html\Builder as HtmlBuilder;
-use Yajra\DataTables\Html\Button;
-use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\Html\Editor\Editor;
-use Yajra\DataTables\Html\Editor\Fields;
-use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\Facades\DataTables;
 
 class OperationDataTable
 {
     public function ajax()
     {
-        $query = Operation::query()->orderBy('id', 'desc');
+        $query = Operation::with(['company', 'currentPrice'])->orderBy('id', 'desc');
 
         $status = request('status');
         if ($status !== null && $status !== '') {
@@ -29,22 +21,38 @@ class OperationDataTable
             $query->where('applicable_for', $applicable);
         }
 
+        $companyId = request('company_id');
+        if ($companyId !== null && $companyId !== '') {
+            $query->where('company_id', $companyId);
+        }
+
         return DataTables::eloquent($query)
             ->addIndexColumn()
-            ->editColumn('is_active', function ($operation) {
-                return $operation->is_active ? 'Active' : 'Inactive';
+            ->addColumn('company_name', fn($op) => $op->company ? $op->company->company_name : '—')
+            ->addColumn('current_price', function ($op) {
+                return $op->currentPrice
+                    ? '₹ ' . number_format($op->currentPrice->price, 2)
+                    : '<span class="text-warning">Not set</span>';
             })
-            ->addColumn('action', function ($operation) {
+            ->editColumn('operation_name', function ($op) {
+                return '<a href="' . route('operations.show', $op->id) . '">' . e($op->operation_name) . '</a>';
+            })
+            ->editColumn('is_active', fn($op) => $op->is_active ? 'Active' : 'Inactive')
+            ->addColumn('action', function ($op) {
                 return '
-                    <button type="button" class="btn btn-warning btn-sm edit-btn" data-id="' . $operation->id . '" data-toggle="modal" data-target="#edit-module-popup">
+                    <button type="button" class="btn btn-warning btn-sm edit-btn"
+                        data-id="' . $op->id . '" data-toggle="modal" data-target="#edit-module-popup">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="' . $operation->id . '">
+                    <a href="' . route('operations.show', $op->id) . '" class="btn btn-info btn-sm" title="View">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                    <button class="btn btn-sm btn-danger delete-btn" data-id="' . $op->id . '">
                         <i class="fas fa-trash"></i>
                     </button>
                 ';
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['operation_name', 'current_price', 'action'])
             ->toJson();
     }
 }

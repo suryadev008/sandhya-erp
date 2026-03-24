@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('machine_name');
             $table->string('machine_number', 50)->unique();
-            $table->string('machine_type');
+            $table->foreignId('machine_type_id')->constrained('machine_types')->restrictOnDelete();
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();

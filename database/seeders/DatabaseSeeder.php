@@ -19,11 +19,12 @@ class DatabaseSeeder extends Seeder
 
         // ── Master Tables (order matters — FK dependencies) ─────────────
         $this->call([
-            MachineSeeder::class , // No FK dependency
-            OperationSeeder::class , // No FK dependency
-            CompanySeeder::class , // No FK dependency
-            PartSeeder::class , // Depends on: companies
-            EmployeeSeeder::class , // Depends on: users
+            MachineTypeSeeder::class, // No FK dependency
+            MachineSeeder::class,     // Depends on: machine_types
+            CompanySeeder::class,     // No FK dependency
+            OperationSeeder::class,   // Depends on: companies
+            PartSeeder::class,        // Depends on: companies
+            EmployeeSeeder::class,    // Depends on: users
         ]);
     }
 }

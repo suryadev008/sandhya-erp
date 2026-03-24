@@ -25,7 +25,7 @@ resources/views/partials/sidebar.blade.php
     @endauth
 
     <!-- SidebarSearch Form -->
-    <!-- <div class="form-inline">
+    <div class="form-inline">
       <div class="input-group" data-widget="sidebar-search">
         <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
         <div class="input-group-append">
@@ -34,7 +34,7 @@ resources/views/partials/sidebar.blade.php
           </button>
         </div>
       </div>
-    </div> -->
+    </div>
 
     <!-- Sidebar Menu -->
     <nav class="mt-2">
@@ -49,12 +49,19 @@ resources/views/partials/sidebar.blade.php
 
         <!-- Production Entry -->
 
-        <!-- <li class="nav-item {{ request()->routeIs('lathe-productions.*') ? 'menu-open' : '' }}">
+        <li class="nav-item {{ request()->routeIs('lathe-productions.*') ? 'menu-open' : '' }}">
           <a href="#" class="nav-link {{ request()->routeIs('lathe-productions.*') ? 'active' : '' }}">
             <i class="nav-icon fas fa-clipboard-list"></i>
             <p>Production Register <i class="right fas fa-angle-left"></i></p>
           </a>
           <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ route('lathe-productions.index') }}"
+                class="nav-link {{ request()->routeIs('lathe-productions.index') || request()->routeIs('lathe-productions.show') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Lathe Register</p>
+              </a>
+            </li>
             <li class="nav-item">
               <a href="{{ route('lathe-productions.create') }}"
                 class="nav-link {{ request()->routeIs('lathe-productions.create') ? 'active' : '' }}">
@@ -63,7 +70,7 @@ resources/views/partials/sidebar.blade.php
               </a>
             </li>
           </ul>
-        </li> -->
+        </li>
 
 
         <!-- Master -->
@@ -73,18 +80,39 @@ resources/views/partials/sidebar.blade.php
             <p>Master <i class="right fas fa-angle-left"></i></p>
           </a>
           <ul class="nav nav-treeview">
-            <!-- <li class="nav-item">
+            <li class="nav-item">
               <a href="{{ url('/master/employees') }}"
                 class="nav-link {{ request()->is('master/employees*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Employees</p>
               </a>
-            </li> -->
+            </li>
+            <li class="nav-item">
+              <a href="{{ url('/master/salaries') }}"
+                class="nav-link {{ request()->is('master/salaries*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Salaries</p>
+              </a>
+            </li>
             <li class="nav-item">
               <a href="{{ url('/master/companies') }}"
                 class="nav-link {{ request()->is('master/companies*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Companies</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ url('/master/contacts') }}"
+                class="nav-link {{ request()->is('master/contacts*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Contacts</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ url('/master/machine-types') }}"
+                class="nav-link {{ request()->is('master/machine-types*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Machine Types</p>
               </a>
             </li>
             <li class="nav-item">
@@ -101,20 +129,21 @@ resources/views/partials/sidebar.blade.php
                 <p>Operations</p>
               </a>
             </li>
-            <!-- <li class="nav-item">
+            <li class="nav-item">
               <a href="{{ url('/master/parts') }}"
                 class="nav-link {{ request()->is('master/parts*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Parts</p>
               </a>
             </li>
+
             <li class="nav-item">
-              <a href="{{ url('/master/salaries') }}"
-                class="nav-link {{ request()->is('master/salaries*') ? 'active' : '' }}">
+              <a href="{{ url('/master/payrolls') }}"
+                class="nav-link {{ request()->is('master/payrolls*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Salaries</p>
+                <p>Payroll</p>
               </a>
-            </li> -->
+            </li>
           </ul>
         </li>
 
