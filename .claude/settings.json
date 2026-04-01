@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -r APP_DEBUG d:/XAMP/htdocs/sandhya_erp/ --include=*.php --include=*.env)",
+      "Bash(xargs grep:*)",
+      "Bash(find /d/XAMP/htdocs/sandhya_erp/public -name *.css -type f)",
+      "Bash(php -l app/Http/Controllers/CncProductionController.php)",
+      "Bash(php -l app/Models/CncProduction.php)",
+      "Bash(php -l app/Models/EmployeeOperationRate.php)",
+      "Bash(php -l app/Models/Employee.php)"
+    ]
+  }
+}

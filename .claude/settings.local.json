@@ -4,7 +4,12 @@
       "Bash(php artisan:*)",
       "Bash(php -r \":*)",
       "Bash(composer require:*)",
-      "Bash(php -r \"require ''vendor/autoload.php''; echo class_exists\\(''Barryvdh\\\\DomPDF\\\\Facade\\\\Pdf''\\) ? ''dompdf: YES'' : ''dompdf: NO'';\")"
+      "Bash(php -r \"require ''vendor/autoload.php''; echo class_exists\\(''Barryvdh\\\\DomPDF\\\\Facade\\\\Pdf''\\) ? ''dompdf: YES'' : ''dompdf: NO'';\")",
+      "Bash(sed -i 's|/master/employees|/payroll/employees|g' d:/XAMP/htdocs/sandhya_erp/resources/views/dashboard.blade.php)",
+      "Bash(sed -i 's|/master/salaries|/payroll/salaries|g' d:/XAMP/htdocs/sandhya_erp/resources/views/dashboard.blade.php)",
+      "Bash(sed -i 's|/master/employees|/payroll/employees|g' d:/XAMP/htdocs/sandhya_erp/resources/views/salaries/index.blade.php)",
+      "Bash(sed -i 's|/master/employees|/payroll/employees|g' d:/XAMP/htdocs/sandhya_erp/resources/views/employees/index.blade.php)",
+      "Bash(sed -i 's|/master/payrolls|/payroll/payrolls|g' d:/XAMP/htdocs/sandhya_erp/resources/views/payrolls/lathe_slip.blade.php)"
     ]
   }
 }
