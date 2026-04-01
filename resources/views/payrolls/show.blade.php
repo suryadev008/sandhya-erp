@@ -203,7 +203,7 @@
                     <td>
                       {{ number_format($p->deductions, 2) }}
                       @if($p->status === 'draft')
-                        <button class="btn btn-xs btn-outline-danger ml-1 btn-edit-deduction" data-id="{{ $p->id }}" data-deduction="{{ $p->deductions }}" data-remarks="{{ $p->deduction_remarks }}" title="Edit Deduction">
+                        <button class="btn btn-xs btn-outline-danger ml-1 btn-edit-deduction" data-id="{{ (int) $p->id }}" data-deduction="{{ (float) $p->deductions }}" data-remarks="{{ e($p->deduction_remarks) }}" title="Edit Deduction">
                           <i class="fas fa-edit"></i>
                         </button>
                       @endif
@@ -452,11 +452,11 @@
 
   <script>
   var empId      = {{ $employee->id }};
-  var genUrl     = '/master/payrolls/' + empId + '/generate';
-  var statusUrl  = function(id) { return '/master/payrolls/' + id + '/status'; };
-  var extraUrl   = function(id) { return '/master/payrolls/' + id + '/extra-payment'; };
-  var dedUrl     = function(id) { return '/master/payrolls/' + id + '/deduction'; };
-  var detailUrl  = function(id) { return '/master/payrolls/' + id + '/detail'; };
+  var genUrl     = '/payroll/payrolls/' + empId + '/generate';
+  var statusUrl  = function(id) { return '/payroll/payrolls/' + id + '/status'; };
+  var extraUrl   = function(id) { return '/payroll/payrolls/' + id + '/extra-payment'; };
+  var dedUrl     = function(id) { return '/payroll/payrolls/' + id + '/deduction'; };
+  var detailUrl  = function(id) { return '/payroll/payrolls/' + id + '/detail'; };
 
   var Toast = Swal.mixin({
     toast: true, position: 'top-end', showConfirmButton: false,
@@ -594,29 +594,38 @@
     $.getJSON(detailUrl(id), function (res) {
       if (!res.success) { $('#detail-body').html('<p class="text-danger">Failed to load.</p>'); return; }
       var d = res.data;
-      var monthName = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.month];
+
+      // Safe HTML escape helper — prevents XSS from user-supplied strings
+      function esc(str) {
+        if (str === null || str === undefined) return '—';
+        return $('<div>').text(String(str)).html();
+      }
+
+      var deductionRemarks = d.deduction_remarks
+        ? ' <small class="text-muted">(' + esc(d.deduction_remarks) + ')</small>'
+        : '';
 
       var html =
         '<div class="row">' +
         '<div class="col-md-6">' +
           '<table class="table table-sm table-bordered mb-3">' +
             '<tr><th class="bg-light" colspan="2">Attendance</th></tr>' +
-            '<tr><th>Working Days</th><td>' + d.total_working_days + '</td></tr>' +
-            '<tr><th>Present Days</th><td>' + d.present_days + '</td></tr>' +
-            '<tr><th>Absent Days</th><td>' + (d.total_working_days - d.present_days) + '</td></tr>' +
-            '<tr><th>Sunday Half Days</th><td>' + d.sunday_half_days + '</td></tr>' +
+            '<tr><th>Working Days</th><td>' + parseInt(d.total_working_days) + '</td></tr>' +
+            '<tr><th>Present Days</th><td>' + parseFloat(d.present_days) + '</td></tr>' +
+            '<tr><th>Absent Days</th><td>' + (parseInt(d.total_working_days) - parseFloat(d.present_days)) + '</td></tr>' +
+            '<tr><th>Sunday Half Days</th><td>' + parseFloat(d.sunday_half_days) + '</td></tr>' +
           '</table>' +
         '</div>' +
         '<div class="col-md-6">' +
           '<table class="table table-sm table-bordered mb-3">' +
             '<tr><th class="bg-light" colspan="2">Earnings</th></tr>' +
             '<tr><th>Lathe Amount</th><td>₹ ' + parseFloat(d.total_lathe_amount).toFixed(2) + '</td></tr>' +
-            '<tr><th>CNC Days</th><td>' + d.total_cnc_days + '</td></tr>' +
+            '<tr><th>CNC Days</th><td>' + parseFloat(d.total_cnc_days) + '</td></tr>' +
             '<tr><th>CNC Rate/Day</th><td>₹ ' + parseFloat(d.cnc_rate_per_day).toFixed(2) + '</td></tr>' +
             '<tr><th>CNC Amount</th><td>₹ ' + parseFloat(d.total_cnc_amount).toFixed(2) + '</td></tr>' +
             '<tr><th>Extra Payments</th><td>₹ ' + parseFloat(d.extra_payment_total).toFixed(2) + '</td></tr>' +
             '<tr class="table-warning"><th>Gross Amount</th><td><strong>₹ ' + parseFloat(d.gross_amount).toFixed(2) + '</strong></td></tr>' +
-            '<tr class="table-danger"><th>Deductions</th><td>₹ ' + parseFloat(d.deductions).toFixed(2) + (d.deduction_remarks ? ' <small class="text-muted">(' + d.deduction_remarks + ')</small>' : '') + '</td></tr>' +
+            '<tr class="table-danger"><th>Deductions</th><td>₹ ' + parseFloat(d.deductions).toFixed(2) + deductionRemarks + '</td></tr>' +
             '<tr class="table-success"><th>Net Amount</th><td><strong>₹ ' + parseFloat(d.net_amount).toFixed(2) + '</strong></td></tr>' +
           '</table>' +
         '</div>' +
@@ -627,14 +636,14 @@
         html += '<h6 class="border-bottom pb-1">Extra Payments Breakdown</h6><table class="table table-sm table-bordered">' +
           '<thead class="thead-light"><tr><th>#</th><th>Description</th><th>Amount</th></tr></thead><tbody>';
         d.extra_payments.forEach(function (ep, i) {
-          html += '<tr><td>' + (i+1) + '</td><td>' + ep.payment_name + '</td><td>₹ ' + parseFloat(ep.amount).toFixed(2) + '</td></tr>';
+          html += '<tr><td>' + (i + 1) + '</td><td>' + esc(ep.payment_name) + '</td><td>₹ ' + parseFloat(ep.amount).toFixed(2) + '</td></tr>';
         });
         html += '</tbody></table>';
       }
 
       html += '<div class="row mt-2">' +
-        '<div class="col-sm-6"><small class="text-muted">Generated by: ' + (d.generated_by ? d.generated_by.name : '—') + '</small></div>' +
-        '<div class="col-sm-6 text-right"><small class="text-muted">Approved by: ' + (d.approved_by ? d.approved_by.name : '—') + '</small></div>' +
+        '<div class="col-sm-6"><small class="text-muted">Generated by: ' + esc(d.generated_by ? d.generated_by.name : null) + '</small></div>' +
+        '<div class="col-sm-6 text-right"><small class="text-muted">Approved by: ' + esc(d.approved_by ? d.approved_by.name : null) + '</small></div>' +
         '</div>';
 
       $('#detail-body').html(html);

@@ -21,7 +21,7 @@ class ContactController extends Controller
         try {
             $validated = $request->validate([
                 'person_name'         => 'required|string|max:255',
-                'contact_no'          => 'required|string|max:20',
+                'contact_no'          => 'required|string|max:20|unique:contacts,contact_no',
                 'whatsapp_no'         => 'nullable|string|max:20',
                 'upi_no'              => 'nullable|string|max:100',
                 'account_holder_name' => 'nullable|string|max:255',
@@ -61,7 +61,7 @@ class ContactController extends Controller
             $contact   = Contact::findOrFail($id);
             $validated = $request->validate([
                 'person_name'         => 'required|string|max:255',
-                'contact_no'          => 'required|string|max:20',
+                'contact_no'          => 'required|string|max:20|unique:contacts,contact_no,' . $id,
                 'whatsapp_no'         => 'nullable|string|max:20',
                 'upi_no'              => 'nullable|string|max:100',
                 'account_holder_name' => 'nullable|string|max:255',

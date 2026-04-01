@@ -65,7 +65,7 @@ resources/views/dashboard.blade.php
               </small>
             </div>
             <div class="icon"><i class="fas fa-users"></i></div>
-            <a href="{{ url('/master/employees') }}" class="small-box-footer">
+            <a href="{{ url('/payroll/employees') }}" class="small-box-footer">
               View All <i class="fas fa-arrow-circle-right"></i>
             </a>
           </div>
@@ -85,7 +85,7 @@ resources/views/dashboard.blade.php
               </small>
             </div>
             <div class="icon"><i class="fas fa-rupee-sign"></i></div>
-            <a href="{{ url('/master/salaries') }}" class="small-box-footer">
+            <a href="{{ url('/payroll/salaries') }}" class="small-box-footer">
               View Salaries <i class="fas fa-arrow-circle-right"></i>
             </a>
           </div>
@@ -250,7 +250,7 @@ resources/views/dashboard.blade.php
               <div class="card-header">
                 <h3 class="card-title"><i class="fas fa-user-clock mr-1"></i> Recently Added Employees</h3>
                 <div class="card-tools">
-                  <a href="{{ url('/master/employees') }}" class="btn btn-primary btn-sm">View All</a>
+                  <a href="{{ url('/payroll/employees') }}" class="btn btn-primary btn-sm">View All</a>
                 </div>
               </div>
               <div class="card-body p-0">
@@ -307,8 +307,8 @@ resources/views/dashboard.blade.php
             <h6 class="text-muted font-weight-bold mb-2"><i class="fas fa-bolt mr-1"></i> Quick Links</h6>
           </div>
           @foreach([
-            ['url' => '/master/employees',  'icon' => 'fas fa-users',        'color' => 'primary', 'label' => 'Employees'],
-            ['url' => '/master/salaries',   'icon' => 'fas fa-rupee-sign',   'color' => 'success', 'label' => 'Salaries'],
+            ['url' => '/payroll/employees',  'icon' => 'fas fa-users',        'color' => 'primary', 'label' => 'Employees'],
+            ['url' => '/payroll/salaries',   'icon' => 'fas fa-rupee-sign',   'color' => 'success', 'label' => 'Salaries'],
             ['url' => '/master/companies',  'icon' => 'fas fa-building',     'color' => 'danger',  'label' => 'Companies'],
             ['url' => '/master/machines',   'icon' => 'fas fa-cog',          'color' => 'warning', 'label' => 'Machines'],
             ['url' => '/master/operations', 'icon' => 'fas fa-wrench',       'color' => 'info',    'label' => 'Operations'],

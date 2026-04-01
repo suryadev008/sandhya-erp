@@ -85,11 +85,20 @@ class PayrollController extends Controller
     {
         $validated = $request->validate([
             'month'              => 'required|integer|min:1|max:12',
-            'year'               => 'required|integer|min:2020|max:2099',
+            'year'               => 'required|integer|min:2020|max:' . now()->year,
             'total_working_days' => 'required|integer|min:1|max:31',
             'present_days'       => 'required|numeric|min:0|max:31',
             'sunday_half_days'   => 'nullable|numeric|min:0|max:10',
         ]);
+
+        // Prevent generating payroll for a future month
+        $payrollDate = \Carbon\Carbon::createFromDate($validated['year'], $validated['month'], 1);
+        if ($payrollDate->startOfMonth()->isAfter(now()->startOfMonth())) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Cannot generate payroll for a future month.',
+            ], 422);
+        }
 
         $employee = Employee::with('currentSalary')->findOrFail($id);
 
@@ -231,6 +240,13 @@ class PayrollController extends Controller
             'deductions'        => 'required|numeric|min:0',
             'deduction_remarks' => 'nullable|string|max:500',
         ]);
+
+        if ($validated['deductions'] > $payroll->gross_amount) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Deductions (₹' . number_format($validated['deductions'], 2) . ') cannot exceed gross amount (₹' . number_format($payroll->gross_amount, 2) . ').',
+            ], 422);
+        }
 
         $payroll->update([
             'deductions'        => $validated['deductions'],

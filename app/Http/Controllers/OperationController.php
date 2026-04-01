@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Operation;
 use App\Models\OperationPrice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class OperationController extends Controller
 {
@@ -53,7 +54,8 @@ class OperationController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['success' => false, 'message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Something went wrong: ' . $e->getMessage()], 500);
+            Log::error('Operation failed', ['error' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
@@ -128,7 +130,8 @@ class OperationController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['success' => false, 'message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Something went wrong: ' . $e->getMessage()], 500);
+            Log::error('Operation failed', ['error' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 

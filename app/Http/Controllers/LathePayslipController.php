@@ -203,6 +203,13 @@ class LathePayslipController extends Controller
             'deduction_remarks' => 'nullable|string|max:500',
         ]);
 
+        if ($validated['deductions'] > $payroll->gross_amount) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Deductions (₹' . number_format($validated['deductions'], 2) . ') cannot exceed gross amount (₹' . number_format($payroll->gross_amount, 2) . ').',
+            ], 422);
+        }
+
         $payroll->update([
             'deductions'        => $validated['deductions'],
             'deduction_remarks' => $validated['deduction_remarks'],

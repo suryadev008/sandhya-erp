@@ -16,6 +16,7 @@ class SalaryController extends Controller
     public function getData()
     {
         $employees = Employee::with(['currentSalary'])
+            ->whereNull('deleted_at')
             ->orderBy('name')
             ->get()
             ->map(function ($emp) {

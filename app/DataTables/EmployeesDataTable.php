@@ -30,12 +30,16 @@ class EmployeesDataTable
             ->editColumn('employee_type', function ($emp) {
                 return ucfirst($emp->employee_type);
             })
+            ->editColumn('joining_date', function ($emp) {
+                return $emp->joining_date ? $emp->joining_date->format('d-m-Y') : '—';
+            })
             ->addColumn('action', function ($emp) {
+                $id = (int) $emp->id;
                 return '
-                    <button type="button" class="btn btn-warning btn-sm edit-btn" data-id="' . $emp->id . '" data-toggle="modal" data-target="#edit-module-popup">
+                    <button type="button" class="btn btn-warning btn-sm edit-btn" data-id="' . $id . '" data-toggle="modal" data-target="#edit-module-popup">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="' . $emp->id . '">
+                    <button class="btn btn-sm btn-danger delete-btn" data-id="' . $id . '">
                         <i class="fas fa-trash"></i>
                     </button>
                 ';

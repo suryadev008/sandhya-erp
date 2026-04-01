@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'emp_code',
         'name',
@@ -20,6 +22,9 @@ class Employee extends Model
         'bank_name',
         'ifsc_code',
         'employee_type',
+        'cnc_payment_type',
+        'cnc_target_per_shift',
+        'cnc_incentive_rate',
         'experience_years',
         'joining_date',
         'status',
@@ -27,7 +32,9 @@ class Employee extends Model
     ];
 
     protected $casts = [
-        'joining_date' => 'date',
+        'joining_date'         => 'date',
+        'cnc_incentive_rate'   => 'decimal:2',
+        'cnc_target_per_shift' => 'integer',
     ];
 
     public function salaries()
@@ -41,5 +48,23 @@ class Employee extends Model
         return $this->hasOne(EmployeeSalary::class)
             ->where('effect_from', '<=', now()->toDateString())
             ->orderBy('effect_from', 'desc');
+    }
+
+    /** All employee-specific operation rates */
+    public function operationRates()
+    {
+        return $this->hasMany(EmployeeOperationRate::class)->orderBy('applicable_from', 'desc');
+    }
+
+    /** Check if this employee uses CNC production */
+    public function isCnc(): bool
+    {
+        return in_array($this->employee_type, ['cnc', 'both']);
+    }
+
+    /** Check if this employee uses Lathe production */
+    public function isLathe(): bool
+    {
+        return in_array($this->employee_type, ['lathe', 'both']);
     }
 }

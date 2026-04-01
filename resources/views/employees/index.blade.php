@@ -193,6 +193,37 @@
                   </div>
                 </div>
 
+                {{-- CNC Settings (shown/hidden by JS) --}}
+                <div class="col-12 cnc-fields d-none">
+                  <h6 class="text-muted font-weight-bold mb-2 border-bottom pb-1 mt-2">
+                    <i class="fas fa-cogs mr-1 text-info"></i> CNC Settings
+                  </h6>
+                </div>
+                <div class="col-md-4 cnc-fields d-none">
+                  <div class="form-group">
+                    <label>CNC Payment Model <span class="text-danger">*</span></label>
+                    <select name="cnc_payment_type" id="cnc_payment_type" class="form-control">
+                      <option value="day_rate">Day Rate + Incentive</option>
+                      <option value="per_piece">Per Piece (like Lathe)</option>
+                    </select>
+                    <small class="text-muted">Day Rate: fixed salary + bonus above target. Per Piece: paid per piece.</small>
+                  </div>
+                </div>
+                <div class="col-md-4 cnc-fields d-none">
+                  <div class="form-group">
+                    <label>Target Pieces / Shift</label>
+                    <input type="number" min="1" name="cnc_target_per_shift" id="cnc_target_per_shift" class="form-control" placeholder="90" value="90">
+                    <small class="text-muted">Standard target per 8hr shift</small>
+                  </div>
+                </div>
+                <div class="col-md-4 cnc-fields cnc-incentive-field d-none">
+                  <div class="form-group">
+                    <label>Incentive Rate (₹/piece above target)</label>
+                    <input type="number" step="0.01" min="0" name="cnc_incentive_rate" id="cnc_incentive_rate" class="form-control" placeholder="0.00">
+                    <small class="text-muted">Only for Day Rate model</small>
+                  </div>
+                </div>
+
                 {{-- Salary --}}
                 <div class="col-12"><h6 class="text-muted font-weight-bold mb-2 border-bottom pb-1 mt-2">Salary Details <small class="text-muted font-weight-normal">(optional)</small></h6></div>
                 <div class="col-md-3">
@@ -366,6 +397,34 @@
                       <option value="inactive">Inactive</option>
                       <option value="terminated">Terminated</option>
                     </select>
+                  </div>
+                </div>
+
+                {{-- CNC Settings Edit --}}
+                <div class="col-12 edit-cnc-fields d-none">
+                  <h6 class="text-muted font-weight-bold mb-2 border-bottom pb-1 mt-2">
+                    <i class="fas fa-cogs mr-1 text-info"></i> CNC Settings
+                  </h6>
+                </div>
+                <div class="col-md-4 edit-cnc-fields d-none">
+                  <div class="form-group">
+                    <label>CNC Payment Model</label>
+                    <select name="cnc_payment_type" id="edit_cnc_payment_type" class="form-control">
+                      <option value="day_rate">Day Rate + Incentive</option>
+                      <option value="per_piece">Per Piece (like Lathe)</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-4 edit-cnc-fields d-none">
+                  <div class="form-group">
+                    <label>Target Pieces / Shift</label>
+                    <input type="number" min="1" name="cnc_target_per_shift" id="edit_cnc_target_per_shift" class="form-control" placeholder="90">
+                  </div>
+                </div>
+                <div class="col-md-4 edit-cnc-fields edit-cnc-incentive-field d-none">
+                  <div class="form-group">
+                    <label>Incentive Rate (₹/piece above target)</label>
+                    <input type="number" step="0.01" min="0" name="cnc_incentive_rate" id="edit_cnc_incentive_rate" class="form-control" placeholder="0.00">
                   </div>
                 </div>
               </div>
@@ -569,7 +628,7 @@
       $('#editEmployeesForm').data('initial-state', '');
 
       $.ajax({
-        url: '/master/employees/' + id + '/edit', type: 'GET',
+        url: '/payroll/employees/' + id + '/edit', type: 'GET',
         success: function (response) {
           if (response.success) {
             let d = response.data;
@@ -590,6 +649,11 @@
             $('#edit_experience_years').val(d.experience_years);
             $('#edit_joining_date').val(d.joining_date ? d.joining_date.substring(0, 10) : '');
             $('#edit_status').val(d.status);
+            // CNC fields
+            $('#edit_cnc_payment_type').val(d.cnc_payment_type || 'day_rate');
+            $('#edit_cnc_target_per_shift').val(d.cnc_target_per_shift || 90);
+            $('#edit_cnc_incentive_rate').val(d.cnc_incentive_rate || '0.00');
+            toggleCncFields(d.employee_type, 'edit');
             if (d.aadhar_image) {
               $('#edit_aadhar_image_preview img').attr('src', '/storage/' + d.aadhar_image);
               $('#edit_aadhar_image_preview').removeClass('d-none');
@@ -636,7 +700,7 @@
 
         let editFormData = new FormData(form);
         $.ajax({
-          url: '/master/employees/' + id, type: 'POST',
+          url: '/payroll/employees/' + id, type: 'POST',
           data: editFormData, processData: false, contentType: false,
           success: function (response) {
             submitBtn.html(originalText).prop('disabled', true);
@@ -655,6 +719,33 @@
       }
     });
 
+    // ── CNC fields show/hide (Add form) ──────────────────────────────
+    function toggleCncFields(type, prefix) {
+      prefix = prefix || '';
+      var isCnc = (type === 'cnc' || type === 'both');
+      var selector = prefix ? '.edit-cnc-fields' : '.cnc-fields';
+      if (isCnc) {
+        $(selector).removeClass('d-none');
+      } else {
+        $(selector).addClass('d-none');
+      }
+      // Show incentive field only for day_rate
+      var payType = prefix ? $('#edit_cnc_payment_type').val() : $('#cnc_payment_type').val();
+      var incSel  = prefix ? '.edit-cnc-incentive-field' : '.cnc-incentive-field';
+      if (isCnc && payType === 'day_rate') {
+        $(incSel).removeClass('d-none');
+      } else {
+        $(incSel).addClass('d-none');
+      }
+    }
+
+    $('#employee_type').on('change', function () { toggleCncFields($(this).val()); });
+    $('#cnc_payment_type').on('change', function () { toggleCncFields($('#employee_type').val()); });
+
+    $('#edit_employee_type').on('change', function () { toggleCncFields($(this).val(), 'edit'); });
+    $('#edit_cnc_payment_type').on('change', function () { toggleCncFields($('#edit_employee_type').val(), 'edit'); });
+
+    // ── Populate CNC fields in edit form ─────────────────────────────
     // Delete
     $(document).on('click', '.delete-btn', function () {
       let id = $(this).data('id');
@@ -666,7 +757,7 @@
       }).then((result) => {
         if (result.isConfirmed) {
           $.ajax({
-            url: '/master/employees/' + id, type: 'DELETE',
+            url: '/payroll/employees/' + id, type: 'DELETE',
             data: { _token: '{{ csrf_token() }}' },
             success: function (response) {
               if (response.success) {

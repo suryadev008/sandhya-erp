@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DataTables\MachineTypeDataTable;
 use App\Models\MachineType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class MachineTypeController extends Controller
 {
@@ -31,7 +32,8 @@ class MachineTypeController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['success' => false, 'message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Something went wrong: ' . $e->getMessage()], 500);
+            Log::error('MachineType operation failed', ['error' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 
@@ -57,7 +59,8 @@ class MachineTypeController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['success' => false, 'message' => 'Validation error', 'errors' => $e->errors()], 422);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Something went wrong: ' . $e->getMessage()], 500);
+            Log::error('MachineType operation failed', ['error' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Something went wrong. Please try again.'], 500);
         }
     }
 

@@ -68,8 +68,8 @@
           let rows = res.data.map(function (emp, i) {
             let statusText = emp.status ? emp.status.charAt(0).toUpperCase() + emp.status.slice(1) : '';
 
-            let nameLink = '<a href="/master/employees/' + emp.id + '">' + emp.name + '</a>';
-            let codeLink = '<a href="/master/employees/' + emp.id + '">' + emp.emp_code + '</a>';
+            let nameLink = '<a href="/payroll/employees/' + emp.id + '">' + emp.name + '</a>';
+            let codeLink = '<a href="/payroll/employees/' + emp.id + '">' + emp.emp_code + '</a>';
 
             return [
               i + 1,

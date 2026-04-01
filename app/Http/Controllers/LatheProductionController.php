@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use App\Models\Employee;
+use App\Models\EmployeeOperationRate;
 use App\Models\LatheProduction;
 use App\Models\Machine;
 use App\Models\MachineType;
@@ -30,9 +31,15 @@ class LatheProductionController extends Controller
     {
         $employee = Employee::findOrFail($employeeId);
 
-        $year  = (int) ($request->year  ?? now()->year);
-        $month = (int) ($request->month ?? now()->month);
+        // Validate & clamp year/month to safe ranges
+        $year  = max(2020, min((int) now()->year, (int) ($request->year  ?? now()->year)));
+        $month = max(1,    min(12,                (int) ($request->month ?? now()->month)));
         $date  = $request->filled('date') ? $request->date : null;
+
+        // Validate date format if provided
+        if ($date && !\Illuminate\Support\Carbon::canBeCreatedFromFormat($date, 'Y-m-d')) {
+            $date = null;
+        }
 
         $query = LatheProduction::with(['company', 'part', 'operation', 'machine'])
             ->where('employee_id', $employeeId)
@@ -54,7 +61,7 @@ class LatheProductionController extends Controller
         $locked = $payroll && in_array($payroll->status, ['approved', 'paid']);
 
         $companies  = Company::active()->orderBy('company_name')->get(['id', 'company_name']);
-        $lathTypeId = MachineType::whereRaw('LOWER(type_name) = ?', ['lathe'])->value('id');
+        $lathTypeId = MachineType::whereRaw('LOWER(type_name) = ?', [config('company.lathe_machine_type')])->value('id');
         $machines   = Machine::active()
             ->when($lathTypeId, fn($q) => $q->where('machine_type_id', $lathTypeId))
             ->orderBy('machine_name')
@@ -94,10 +101,14 @@ class LatheProductionController extends Controller
             'remarks'      => 'nullable|string|max:255',
         ]);
 
-        $rate = (float) (OperationPrice::where('operation_id', $request->operation_id)
-            ->where('applicable_from', '<=', $request->date)
-            ->orderBy('applicable_from', 'desc')
-            ->value('price') ?? 0);
+        // Employee-specific rate takes priority over global operation price
+        $rate = EmployeeOperationRate::rateFor($entry->employee_id, (int) $request->operation_id, $request->date);
+        if ($rate === 0.0) {
+            $rate = (float) (OperationPrice::where('operation_id', $request->operation_id)
+                ->where('applicable_from', '<=', $request->date)
+                ->orderBy('applicable_from', 'desc')
+                ->value('price') ?? 0);
+        }
 
         $entry->update([
             'date'         => $request->date,
@@ -143,7 +154,7 @@ class LatheProductionController extends Controller
 
         $companies = Company::active()->orderBy('company_name')->get(['id', 'company_name']);
 
-        $lathTypeId = MachineType::whereRaw('LOWER(type_name) = ?', ['lathe'])->value('id');
+        $lathTypeId = MachineType::whereRaw('LOWER(type_name) = ?', [config('company.lathe_machine_type')])->value('id');
         $machines   = Machine::active()
             ->when($lathTypeId, fn($q) => $q->where('machine_type_id', $lathTypeId))
             ->orderBy('machine_name')
@@ -155,6 +166,8 @@ class LatheProductionController extends Controller
     /** AJAX: Parts filtered by company */
     public function getPartsByCompany(Request $request)
     {
+        $request->validate(['company_id' => 'required|integer|exists:companies,id']);
+
         $parts = Part::active()
             ->where('company_id', $request->company_id)
             ->orderBy('part_number')
@@ -166,6 +179,8 @@ class LatheProductionController extends Controller
     /** AJAX: Operations filtered by company (lathe/both only) */
     public function getOperationsByCompany(Request $request)
     {
+        $request->validate(['company_id' => 'required|integer|exists:companies,id']);
+
         $operations = Operation::active()
             ->whereIn('applicable_for', ['lathe', 'both'])
             ->where('company_id', $request->company_id)
@@ -175,17 +190,41 @@ class LatheProductionController extends Controller
         return response()->json($operations);
     }
 
-    /** AJAX: Price applicable on a given date for an operation */
+    /** AJAX: Price applicable on a given date for an operation
+     *  Priority: employee-specific rate → global operation price → 0
+     */
     public function getOperationRate(Request $request)
     {
-        $date = $request->date ?? now()->toDateString();
+        $request->validate([
+            'operation_id' => 'required|integer|exists:operations,id',
+            'employee_id'  => 'nullable|integer|exists:employees,id',
+            'date'         => 'nullable|date|before_or_equal:today',
+        ]);
 
-        $price = OperationPrice::where('operation_id', $request->operation_id)
+        $date        = $request->input('date', now()->toDateString());
+        $operationId = (int) $request->operation_id;
+        $employeeId  = $request->filled('employee_id') ? (int) $request->employee_id : null;
+
+        // 1. Employee-specific rate (highest priority)
+        if ($employeeId) {
+            $empRate = EmployeeOperationRate::where('employee_id', $employeeId)
+                ->where('operation_id', $operationId)
+                ->where('applicable_from', '<=', $date)
+                ->orderBy('applicable_from', 'desc')
+                ->value('rate');
+
+            if ($empRate !== null) {
+                return response()->json(['rate' => (float) $empRate, 'source' => 'employee']);
+            }
+        }
+
+        // 2. Global operation price (fallback)
+        $price = OperationPrice::where('operation_id', $operationId)
             ->where('applicable_from', '<=', $date)
             ->orderBy('applicable_from', 'desc')
             ->value('price');
 
-        return response()->json(['rate' => $price !== null ? (float) $price : 0]);
+        return response()->json(['rate' => $price !== null ? (float) $price : 0, 'source' => 'global']);
     }
 
     /** Store multiple production rows */
@@ -211,11 +250,14 @@ class LatheProductionController extends Controller
 
         $inserts = [];
         foreach ($request->rows as $row) {
-            // Fetch price applicable at entry date — historical accuracy
-            $rate = (float) (OperationPrice::where('operation_id', $row['operation_id'])
-                ->where('applicable_from', '<=', $date)
-                ->orderBy('applicable_from', 'desc')
-                ->value('price') ?? 0);
+            // Employee-specific rate takes priority over global operation price
+            $rate = EmployeeOperationRate::rateFor((int) $employeeId, (int) $row['operation_id'], $date);
+            if ($rate === 0.0) {
+                $rate = (float) (OperationPrice::where('operation_id', $row['operation_id'])
+                    ->where('applicable_from', '<=', $date)
+                    ->orderBy('applicable_from', 'desc')
+                    ->value('price') ?? 0);
+            }
 
             $qty    = (int) $row['qty'];
             $amount = $rate * $qty;

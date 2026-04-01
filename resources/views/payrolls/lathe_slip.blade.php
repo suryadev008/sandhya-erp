@@ -391,14 +391,14 @@
   // ── Add Extra ──
   $('#btnSaveExtra').on('click', function () {
     if (!payrollId) { Swal.fire('Info', 'Please save the payroll first.', 'info'); return; }
-    var url = '/master/payrolls/' + empId + '/lathe-slip/' + payrollId + '/extra';
+    var url = '/payroll/payrolls/' + empId + '/lathe-slip/' + payrollId + '/extra';
     doPost(url, { payment_name: $('#extra_name').val(), amount: $('#extra_amount').val() }, $(this));
   });
 
   // ── Remove Extra ──
   $(document).on('click', '.btn-remove-extra', function () {
     var pid = $(this).data('payroll'), eid = $(this).data('extra');
-    var url = '/master/payrolls/' + empId + '/lathe-slip/' + pid + '/extra/' + eid;
+    var url = '/payroll/payrolls/' + empId + '/lathe-slip/' + pid + '/extra/' + eid;
     var btn = $(this);
     Swal.fire({ title: 'Remove?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc3545' })
       .then(r => {
@@ -418,7 +418,7 @@
   // ── Save Deduction ──
   $('#btnSaveDed').on('click', function () {
     if (!payrollId) { Swal.fire('Info', 'Please save the payroll first.', 'info'); return; }
-    var url = '/master/payrolls/' + empId + '/lathe-slip/' + payrollId + '/deduction';
+    var url = '/payroll/payrolls/' + empId + '/lathe-slip/' + payrollId + '/deduction';
     doPost(url, { deductions: $('#ded_amount').val(), deduction_remarks: $('#ded_remarks').val() }, $(this));
   });
 
@@ -428,7 +428,7 @@
     Swal.fire({ title: 'Approve Payroll?', icon: 'question', showCancelButton: true, confirmButtonColor: '#17a2b8', confirmButtonText: 'Yes, Approve' })
       .then(r => {
         if (r.isConfirmed) {
-          var url = '/master/payrolls/' + empId + '/lathe-slip/' + id + '/status';
+          var url = '/payroll/payrolls/' + empId + '/lathe-slip/' + id + '/status';
           doPost(url, { status: 'approved' }, $('#btnApprove'));
         }
       });
@@ -440,7 +440,7 @@
     Swal.fire({ title: 'Mark as Paid?', icon: 'question', showCancelButton: true, confirmButtonColor: '#28a745', confirmButtonText: 'Yes, Mark Paid' })
       .then(r => {
         if (r.isConfirmed) {
-          var url = '/master/payrolls/' + empId + '/lathe-slip/' + id + '/status';
+          var url = '/payroll/payrolls/' + empId + '/lathe-slip/' + id + '/status';
           doPost(url, { status: 'paid' }, $('#btnPaid'));
         }
       });

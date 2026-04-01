@@ -217,7 +217,120 @@
           </div>
         </div>
 
-        {{-- ── 4. Salary ─────────────────────────────────────────── --}}
+        {{-- ── 4. CNC Settings (only for cnc/both employees) ───────── --}}
+        @if(in_array($employee->employee_type, ['cnc', 'both']))
+        <div class="card card-outline card-info mb-2">
+          <div class="card-header d-flex align-items-center py-2">
+            <h5 class="mb-0">
+              <i class="fas fa-cogs mr-2 text-info"></i> CNC Settings
+              <small class="text-muted ml-2">
+                {{ $employee->cnc_payment_type === 'per_piece' ? 'Per Piece' : 'Day Rate + Incentive' }}
+                &nbsp;|&nbsp; Target: {{ $employee->cnc_target_per_shift }} pcs/shift
+              </small>
+            </h5>
+            <button class="btn btn-sm btn-outline-info collapsed ml-auto"
+              data-toggle="collapse" data-target="#collapse-cnc"
+              aria-expanded="false">
+              <i class="fas fa-eye mr-1"></i> Show
+            </button>
+          </div>
+          <div id="collapse-cnc" class="collapse" data-parent="#empAccordion">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <table class="table table-borderless table-sm">
+                    <tr>
+                      <th style="width:180px" class="text-muted">Payment Model</th>
+                      <td>
+                        @if($employee->cnc_payment_type === 'per_piece')
+                          <span class="badge badge-primary">Per Piece</span>
+                          <small class="text-muted ml-1">— paid per piece produced (like lathe)</small>
+                        @else
+                          <span class="badge badge-info">Day Rate + Incentive</span>
+                          <small class="text-muted ml-1">— fixed day salary + bonus above target</small>
+                        @endif
+                      </td>
+                    </tr>
+                    <tr>
+                      <th class="text-muted">Target / Shift</th>
+                      <td>{{ $employee->cnc_target_per_shift ?? 90 }} pieces per shift</td>
+                    </tr>
+                    @if($employee->cnc_payment_type !== 'per_piece')
+                    <tr>
+                      <th class="text-muted">Incentive Rate</th>
+                      <td>₹ {{ number_format($employee->cnc_incentive_rate, 2) }} per piece above target</td>
+                    </tr>
+                    @endif
+                  </table>
+                </div>
+                <div class="col-md-6">
+                  <div class="alert alert-light border mb-0">
+                    <i class="fas fa-info-circle text-info mr-1"></i>
+                    @if($employee->cnc_payment_type === 'per_piece')
+                      This employee is paid per piece completed — similar to lathe operator. Set rates in <strong>Operation Rates</strong> section below.
+                    @else
+                      This employee earns a fixed day-rate salary. Extra pieces above <strong>{{ $employee->cnc_target_per_shift }}</strong>/shift earn <strong>₹{{ number_format($employee->cnc_incentive_rate, 2) }}</strong>/piece incentive.
+                    @endif
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        @endif
+
+        {{-- ── 5. Operation Rates (for lathe/both, or per_piece CNC) ─ --}}
+        @if(in_array($employee->employee_type, ['lathe', 'both']) || ($employee->employee_type === 'cnc' && $employee->cnc_payment_type === 'per_piece'))
+        <div class="card card-outline card-warning mb-2">
+          <div class="card-header d-flex align-items-center py-2">
+            <h5 class="mb-0">
+              <i class="fas fa-tags mr-2 text-warning"></i> Operation Rates
+              <small class="text-muted ml-2">Employee-specific rates override global operation price</small>
+            </h5>
+            <div class="d-flex align-items-center ml-auto">
+              <button class="btn btn-sm btn-warning mr-2" data-toggle="modal" data-target="#add-rate-modal">
+                <i class="fas fa-plus"></i> Add Rate
+              </button>
+              <button class="btn btn-sm btn-outline-warning collapsed"
+                data-toggle="collapse" data-target="#collapse-rates" aria-expanded="false">
+                <i class="fas fa-eye mr-1"></i> Show
+              </button>
+            </div>
+          </div>
+          <div id="collapse-rates" class="collapse" data-parent="#empAccordion">
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-bordered table-sm table-hover mb-0" id="ratesTable">
+                  <thead class="thead-light">
+                    <tr>
+                      <th>#</th>
+                      <th>Operation</th>
+                      <th class="text-right">Rate (₹/piece)</th>
+                      <th>Effective From</th>
+                      <th>Remark</th>
+                      <th class="text-center" style="width:80px">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ratesBody">
+                    <tr><td colspan="6" class="text-center text-muted py-3">
+                      <i class="fas fa-spinner fa-spin"></i> Loading...
+                    </td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="px-3 py-2 bg-light border-top">
+                <small class="text-muted">
+                  <i class="fas fa-info-circle text-warning mr-1"></i>
+                  If no employee-specific rate is set, the global operation price is used.
+                  Rate with latest <em>Effective From</em> date applies for each entry.
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+        @endif
+
+        {{-- ── (Salary) ───────────────────────────────────────────── --}}
         <div class="card card-outline card-primary mb-2">
           <div class="card-header d-flex align-items-center py-2">
             <h5 class="mb-0">
@@ -320,6 +433,51 @@
     </div>
   </section>
 
+  {{-- Add Operation Rate Modal --}}
+  <div class="modal fade" id="add-rate-modal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-warning">
+          <h4 class="modal-title"><i class="fas fa-tags mr-2"></i>Add Employee Operation Rate</h4>
+          <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <form id="addRateForm">
+            @csrf
+            <div class="form-group">
+              <label>Operation <span class="text-danger">*</span></label>
+              <select name="operation_id" id="rate_operation_id" class="form-control select2-modal" required>
+                <option value="">-- Select Operation --</option>
+                @foreach($operations as $op)
+                  <option value="{{ $op->id }}">{{ $op->operation_name }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Rate (₹ per piece) <span class="text-danger">*</span></label>
+              <input type="number" step="0.01" min="0" name="rate" id="rate_amount" class="form-control" placeholder="0.00" required>
+            </div>
+            <div class="form-group">
+              <label>Effective From <span class="text-danger">*</span></label>
+              <input type="date" name="applicable_from" id="rate_from" class="form-control" required>
+              <small class="text-muted">This rate applies from this date onwards. Old payroll entries are unaffected.</small>
+            </div>
+            <div class="form-group">
+              <label>Remark</label>
+              <input type="text" name="remark" id="rate_remark" class="form-control" placeholder="e.g. Joining rate, Experience increment">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" form="addRateForm" id="saveRateBtn" class="btn btn-warning">
+            <i class="fas fa-save mr-1"></i> Save Rate
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   {{-- Add Salary Modal --}}
   <div class="modal fade" id="add-salary-modal" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
@@ -377,6 +535,99 @@
     );
   });
 
+  // ── Operation Rates ──────────────────────────────────────────────
+  var ratesUrl   = '{{ route("employees.operation-rates.index", $employee->id) }}';
+  var ratesStore = '{{ route("employees.operation-rates.store", $employee->id) }}';
+
+  function loadRates() {
+    $.getJSON(ratesUrl, function (res) {
+      var rows = '';
+      if (!res.data || res.data.length === 0) {
+        rows = '<tr><td colspan="6" class="text-center text-muted py-3"><i class="fas fa-inbox mr-1"></i>No rates set — global operation price will be used.</td></tr>';
+      } else {
+        // Group by operation for display
+        $.each(res.data, function (i, r) {
+          rows += '<tr>'
+            + '<td>' + (i + 1) + '</td>'
+            + '<td><strong>' + $('<div>').text(r.operation_name).html() + '</strong></td>'
+            + '<td class="text-right font-weight-bold text-warning">₹ ' + r.rate + '</td>'
+            + '<td>' + r.applicable_from + '</td>'
+            + '<td class="text-muted small">' + (r.remark ? $('<div>').text(r.remark).html() : '—') + '</td>'
+            + '<td class="text-center"><button class="btn btn-xs btn-outline-danger delete-rate-btn" data-id="' + r.id + '"><i class="fas fa-trash"></i></button></td>'
+            + '</tr>';
+        });
+      }
+      $('#ratesBody').html(rows);
+    });
+  }
+
+  // Load rates when accordion opens
+  $('[data-target="#collapse-rates"]').on('click', function () {
+    if (!$(this).hasClass('collapsed') === false) loadRates();
+  });
+  // Also load on page load if already open
+  loadRates();
+
+  // Initialize Select2 in modal
+  $('.select2-modal').select2({ theme: 'bootstrap4', dropdownParent: $('#add-rate-modal'), width: '100%' });
+
+  // Save rate
+  $('#addRateForm').on('submit', function (e) {
+    e.preventDefault();
+    var btn = $('#saveRateBtn');
+    btn.html('<i class="fas fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
+
+    $.ajax({
+      url: ratesStore,
+      type: 'POST',
+      data: $(this).serialize(),
+      success: function (res) {
+        btn.html('<i class="fas fa-save mr-1"></i> Save Rate').prop('disabled', false);
+        if (res.success) {
+          Toast.fire({ icon: 'success', title: res.message });
+          $('#add-rate-modal').modal('hide');
+          $('#addRateForm')[0].reset();
+          loadRates();
+        }
+      },
+      error: function (xhr) {
+        btn.html('<i class="fas fa-save mr-1"></i> Save Rate').prop('disabled', false);
+        var msg = xhr.responseJSON?.errors
+          ? Object.values(xhr.responseJSON.errors).flat().join('<br>')
+          : (xhr.responseJSON?.message || 'Something went wrong.');
+        Swal.fire({ icon: 'error', title: 'Error', html: msg });
+      }
+    });
+  });
+
+  // Delete rate
+  $(document).on('click', '.delete-rate-btn', function () {
+    var rateId = $(this).data('id');
+    Swal.fire({
+      title: 'Delete this rate?',
+      text: 'This will not affect already-generated payrolls.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete'
+    }).then(function (result) {
+      if (!result.isConfirmed) return;
+      $.ajax({
+        url: '{{ url("/payroll/employees/" . $employee->id . "/operation-rates") }}/' + rateId,
+        type: 'POST',
+        data: { _method: 'DELETE', _token: '{{ csrf_token() }}' },
+        success: function () {
+          Toast.fire({ icon: 'success', title: 'Rate deleted.' });
+          loadRates();
+        },
+        error: function () {
+          Toast.fire({ icon: 'error', title: 'Delete failed.' });
+        }
+      });
+    });
+  });
+
+  // ── Auto-calculate salary ──────────────────────────────────────────
   // Auto-calculate salary
   $('#modal_per_day').on('input', function () {
     let v = parseFloat($(this).val());
