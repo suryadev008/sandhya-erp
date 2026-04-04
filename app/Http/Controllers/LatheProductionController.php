@@ -69,9 +69,14 @@ class LatheProductionController extends Controller
 
         $years = range(now()->year, 2020);
 
+        $totalQty    = $entries->sum('qty');
+        $totalAmount = $entries->sum('amount');
+        $presentDays = $entries->pluck('date')->map(fn($d) => \Illuminate\Support\Carbon::parse($d)->toDateString())->unique()->count();
+
         return view('lathe_productions.show', compact(
             'employee', 'entries', 'year', 'month', 'date',
-            'payroll', 'locked', 'companies', 'machines', 'years'
+            'payroll', 'locked', 'companies', 'machines', 'years',
+            'totalQty', 'totalAmount', 'presentDays'
         ));
     }
 
@@ -91,14 +96,17 @@ class LatheProductionController extends Controller
         }
 
         $request->validate([
-            'date'         => 'required|date|before_or_equal:today',
-            'shift'        => 'required|in:day,night,A,B,general',
-            'company_id'   => 'required|exists:companies,id',
-            'part_id'      => 'required|exists:parts,id',
-            'operation_id' => 'required|exists:operations,id',
-            'qty'          => 'required|integer|min:1',
-            'machine_id'   => 'nullable|exists:machines,id',
-            'remarks'      => 'nullable|string|max:255',
+            'date'             => 'required|date|before_or_equal:today',
+            'shift'            => 'required|in:day,night,A,B,general',
+            'company_id'       => 'required|exists:companies,id',
+            'part_id'          => 'required|exists:parts,id',
+            'operation_id'     => 'required|exists:operations,id',
+            'qty'              => 'required|integer|min:1',
+            'machine_id'       => 'nullable|exists:machines,id',
+            'remarks'          => 'nullable|string|max:255',
+            'downtime_type'    => 'nullable|in:machine_breakdown,power_cut,other',
+            'downtime_minutes' => 'nullable|integer|min:0',
+            'is_half_day'      => 'nullable|boolean',
         ]);
 
         // Employee-specific rate takes priority over global operation price
@@ -111,16 +119,19 @@ class LatheProductionController extends Controller
         }
 
         $entry->update([
-            'date'         => $request->date,
-            'shift'        => $request->shift,
-            'company_id'   => $request->company_id,
-            'part_id'      => $request->part_id,
-            'operation_id' => $request->operation_id,
-            'machine_id'   => $request->machine_id,
-            'qty'          => $request->qty,
-            'rate'         => $rate,
-            'amount'       => $rate * $request->qty,
-            'remarks'      => $request->remarks,
+            'date'             => $request->date,
+            'shift'            => $request->shift,
+            'company_id'       => $request->company_id,
+            'part_id'          => $request->part_id,
+            'operation_id'     => $request->operation_id,
+            'machine_id'       => $request->machine_id,
+            'qty'              => $request->qty,
+            'rate'             => $rate,
+            'amount'           => $rate * $request->qty,
+            'remarks'          => $request->remarks,
+            'downtime_type'    => $request->downtime_type ?: null,
+            'downtime_minutes' => $request->downtime_type ? $request->downtime_minutes : null,
+            'is_half_day'      => $request->boolean('is_half_day'),
         ]);
 
         return response()->json(['success' => true, 'entry' => $entry->fresh(['company','part','operation','machine'])]);
@@ -263,20 +274,23 @@ class LatheProductionController extends Controller
             $amount = $rate * $qty;
 
             $inserts[] = [
-                'employee_id'  => $employeeId,
-                'machine_id'   => $machineId,
-                'date'         => $date,
-                'shift'        => $shift,
-                'company_id'   => $row['company_id'],
-                'part_id'      => $row['part_id'],
-                'operation_id' => $row['operation_id'],
-                'qty'          => $qty,
-                'rate'         => $rate,
-                'amount'       => $amount,
-                'remarks'      => $row['remarks'] ?? null,
-                'created_by'   => $createdBy,
-                'created_at'   => $now,
-                'updated_at'   => $now,
+                'employee_id'      => $employeeId,
+                'machine_id'       => $machineId,
+                'date'             => $date,
+                'shift'            => $shift,
+                'company_id'       => $row['company_id'],
+                'part_id'          => $row['part_id'],
+                'operation_id'     => $row['operation_id'],
+                'qty'              => $qty,
+                'rate'             => $rate,
+                'amount'           => $amount,
+                'remarks'          => $row['remarks'] ?? null,
+                'downtime_type'    => $row['downtime_type'] ?? null,
+                'downtime_minutes' => !empty($row['downtime_minutes']) ? (int) $row['downtime_minutes'] : null,
+                'is_half_day'      => !empty($row['is_half_day']) ? 1 : 0,
+                'created_by'       => $createdBy,
+                'created_at'       => $now,
+                'updated_at'       => $now,
             ];
         }
 

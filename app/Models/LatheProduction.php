@@ -18,14 +18,18 @@ class LatheProduction extends Model
         'rate',
         'amount',
         'remarks',
+        'downtime_type',
+        'downtime_minutes',
+        'is_half_day',
         'created_by',
     ];
 
     protected $casts = [
-        'date'   => 'date',
-        'qty'    => 'integer',
-        'rate'   => 'decimal:2',
-        'amount' => 'decimal:2',
+        'date'       => 'date',
+        'qty'        => 'integer',
+        'rate'       => 'decimal:2',
+        'amount'     => 'decimal:2',
+        'is_half_day' => 'boolean',
     ];
 
     public function employee()

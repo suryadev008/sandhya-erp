@@ -54,6 +54,7 @@ Route::middleware(['auth', 'admin'])->prefix('payroll')->group(function () {
     require __DIR__ . '/modules/employees.php';
     require __DIR__ . '/modules/salaries.php';
     require __DIR__ . '/modules/payrolls.php';
+    require __DIR__ . '/modules/attendance.php';
 
 });
 

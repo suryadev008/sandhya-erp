@@ -8,8 +8,8 @@ class Contact extends Model
 {
     protected $fillable = [
         'person_name',
-        'contact_no',
-        'whatsapp_no',
+        'area',
+        'contact_category_id',
         'upi_no',
         'account_holder_name',
         'account_no',
@@ -20,9 +20,22 @@ class Contact extends Model
         'is_active',
     ];
 
-    protected $casts = [
-        'is_active' => 'boolean',
-    ];
+    protected $casts = ['is_active' => 'boolean'];
+
+    public function category()
+    {
+        return $this->belongsTo(ContactCategory::class, 'contact_category_id');
+    }
+
+    public function phones()
+    {
+        return $this->hasMany(ContactPhone::class)->orderByDesc('is_primary');
+    }
+
+    public function primaryPhone()
+    {
+        return $this->hasOne(ContactPhone::class)->where('is_primary', true);
+    }
 
     public function scopeActive($query)
     {

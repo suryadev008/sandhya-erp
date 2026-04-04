@@ -104,7 +104,7 @@
                     <tr>
                       <th>#</th>
                       <th>Date</th>
-                      <th>Company</th>
+                      <th>Vendor</th>
                       <th>Part No.</th>
                       <th>Operation</th>
                       <th>Shift</th>

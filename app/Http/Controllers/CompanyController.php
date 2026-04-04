@@ -45,7 +45,7 @@ class CompanyController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Company created successfully.'
+                'message' => 'Vendor created successfully.'
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
@@ -111,7 +111,7 @@ class CompanyController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Company updated successfully.'
+                'message' => 'Vendor updated successfully.'
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
@@ -248,7 +248,7 @@ class CompanyController extends Controller
             $company->delete();
             return response()->json([
                 'success' => true,
-                'message' => 'Company deleted successfully.'
+                'message' => 'Vendor deleted successfully.'
             ]);
         } catch (\Exception $e) {
             Log::error('Company delete failed', ['id' => $id, 'error' => $e->getMessage()]);

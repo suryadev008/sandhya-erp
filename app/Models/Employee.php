@@ -20,6 +20,7 @@ class Employee extends Model
         'present_address',
         'bank_account_no',
         'bank_name',
+        'bank_branch',
         'ifsc_code',
         'employee_type',
         'cnc_payment_type',

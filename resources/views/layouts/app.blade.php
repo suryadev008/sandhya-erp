@@ -26,6 +26,12 @@
   <!-- summernote -->
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/summernote/summernote-bs4.min.css') }}">
 
+  <style>
+    /* Sidebar scrollable so submenus don't get clipped */
+    .main-sidebar .sidebar { overflow-y: auto !important; }
+    .main-sidebar .nav-sidebar .nav-treeview { overflow: visible !important; }
+  </style>
+
   {{-- Page specific styles --}}
   @stack('styles')
 </head>

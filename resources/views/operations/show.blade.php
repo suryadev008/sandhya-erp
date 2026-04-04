@@ -36,7 +36,7 @@
           <div class="info-box">
             <span class="info-box-icon bg-info"><i class="fas fa-building"></i></span>
             <div class="info-box-content">
-              <span class="info-box-text">Company</span>
+              <span class="info-box-text">Vendor</span>
               <span class="info-box-number">{{ $operation->company?->company_name ?? '—' }}</span>
             </div>
           </div>
@@ -88,7 +88,7 @@
                   <td>{{ $operation->operation_name }}</td>
                 </tr>
                 <tr>
-                  <th class="pl-3">Company</th>
+                  <th class="pl-3">Vendor</th>
                   <td>{{ $operation->company?->company_name ?? '—' }}</td>
                 </tr>
                 <tr>

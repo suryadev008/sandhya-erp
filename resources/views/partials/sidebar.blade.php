@@ -50,10 +50,10 @@ resources/views/partials/sidebar.blade.php
         <!-- Production Register -->
         @php
           $inLathe = request()->routeIs('lathe-productions.*');
-          $inCnc   = request()->routeIs('cnc-productions.*');
-          $inProd  = $inLathe || $inCnc;
+          $inCnc = request()->routeIs('cnc-productions.*');
+          $inProd = $inLathe || $inCnc;
         @endphp
-        <li class="nav-item {{ $inProd ? 'menu-open' : '' }}">
+        <!-- <li class="nav-item {{ $inProd ? 'menu-open' : '' }}">
           <a href="#" class="nav-link {{ $inProd ? 'active' : '' }}">
             <i class="nav-icon fas fa-clipboard-list"></i>
             <p>Production Register <i class="right fas fa-angle-left"></i></p>
@@ -61,7 +61,7 @@ resources/views/partials/sidebar.blade.php
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{ route('lathe-productions.index') }}"
-                class="nav-link {{ $inLathe ? 'active' : '' }}">
+                class="nav-link {{ request()->routeIs('lathe-productions.index') || request()->routeIs('lathe-productions.show') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Lathe Register</p>
               </a>
@@ -88,7 +88,7 @@ resources/views/partials/sidebar.blade.php
               </a>
             </li>
           </ul>
-        </li>
+        </li> -->
 
 
         <!-- Master -->
@@ -108,7 +108,7 @@ resources/views/partials/sidebar.blade.php
               <a href="{{ url('/master/companies') }}"
                 class="nav-link {{ request()->is('master/companies*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Vendor Companies</p>
+                <p>Our Vendors</p>
               </a>
             </li>
             <li class="nav-item">
@@ -171,13 +171,20 @@ resources/views/partials/sidebar.blade.php
                 <p>Salary</p>
               </a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
+              <a href="{{ url('/payroll/attendance') }}"
+                class="nav-link {{ request()->is('payroll/attendance*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Attendance</p>
+              </a>
+            </li> -->
+            <!-- <li class="nav-item">
               <a href="{{ url('/payroll/payrolls') }}"
                 class="nav-link {{ request()->is('payroll/payrolls*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Payroll</p>
               </a>
-            </li>
+            </li> -->
           </ul>
         </li>
 

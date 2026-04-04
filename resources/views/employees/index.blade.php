@@ -146,6 +146,12 @@
                 </div>
                 <div class="col-md-4">
                   <div class="form-group">
+                    <label>Bank Branch</label>
+                    <input type="text" name="bank_branch" id="bank_branch" class="form-control" placeholder="e.g. Pune Main Branch">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
                     <label>IFSC Code</label>
                     <input type="text" name="ifsc_code" id="ifsc_code" class="form-control" placeholder="e.g. SBIN0001234">
                   </div>
@@ -349,6 +355,12 @@
                   <div class="form-group">
                     <label>Bank Name</label>
                     <input type="text" name="bank_name" id="edit_bank_name" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Bank Branch</label>
+                    <input type="text" name="bank_branch" id="edit_bank_branch" class="form-control">
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -644,6 +656,7 @@
             $('#edit_present_address').val(d.present_address);
             $('#edit_bank_account_no').val(d.bank_account_no);
             $('#edit_bank_name').val(d.bank_name);
+            $('#edit_bank_branch').val(d.bank_branch);
             $('#edit_ifsc_code').val(d.ifsc_code);
             $('#edit_employee_type').val(d.employee_type);
             $('#edit_experience_years').val(d.experience_years);

@@ -45,7 +45,7 @@
             <thead>
               <tr>
                 <th>S.No</th>
-                <th>Company</th>
+                <th>Vendor</th>
                 <th>Part Number</th>
                 <th>Part Name</th>
                 <th>Description</th>
@@ -77,9 +77,9 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="company_id">Company <span class="text-danger">*</span></label>
+                      <label for="company_id">Vendor <span class="text-danger">*</span></label>
                       <select name="company_id" id="company_id" class="form-control" required>
-                        <option value="">Select Company</option>
+                        <option value="">Select Vendor</option>
                         @foreach($companies as $company)
                             <option value="{{ $company->id }}">{{ $company->company_name }}</option>
                         @endforeach
@@ -143,9 +143,9 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="edit_company_id">Company <span class="text-danger">*</span></label>
+                      <label for="edit_company_id">Vendor <span class="text-danger">*</span></label>
                       <select name="company_id" id="edit_company_id" class="form-control" required>
-                        <option value="">Select Company</option>
+                        <option value="">Select Vendor</option>
                         @foreach($companies as $company)
                             <option value="{{ $company->id }}">{{ $company->company_name }}</option>
                         @endforeach
@@ -212,7 +212,7 @@
       // Initialize Select2 for Add modal
       $('#company_id').select2({
         theme: 'bootstrap4',
-        placeholder: 'Search Company...',
+        placeholder: 'Search Vendor...',
         allowClear: true,
         dropdownParent: $('#add-module-popup')
       });
@@ -220,7 +220,7 @@
       // Initialize Select2 for Edit modal
       $('#edit_company_id').select2({
         theme: 'bootstrap4',
-        placeholder: 'Search Company...',
+        placeholder: 'Search Vendor...',
         allowClear: true,
         dropdownParent: $('#edit-module-popup')
       });
@@ -259,7 +259,7 @@
 
           var filterHtml =
             '<span class="d-inline-block ml-3"><label>Status:&nbsp;<select id="status-filter" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option><option value="1">Active</option><option value="0">Inactive</option></select></label></span>' +
-            '<span class="d-inline-block ml-3"><label>Company:&nbsp;<select id="company-filter" class="custom-select custom-select-sm form-control form-control-sm" style="max-width:200px">' + companyOptions + '</select></label></span>' +
+            '<span class="d-inline-block ml-3"><label>Vendor:&nbsp;<select id="company-filter" class="custom-select custom-select-sm form-control form-control-sm" style="max-width:200px">' + companyOptions + '</select></label></span>' +
             '<span class="d-inline-block ml-2"><button id="clear-filters" class="btn btn-sm btn-outline-secondary" title="Clear Filters"><i class="fas fa-times"></i> Clear</button></span>';
 
           $('#parts-table_length').css('display', 'inline-block');
@@ -318,7 +318,7 @@
         part_number: { required: true, maxlength: 100 }
       },
       messages: {
-        company_id: { required: "Please select a company." },
+        company_id: { required: "Please select a vendor." },
         part_number: { required: "Please enter a part number." }
       },
       submitHandler: function (form, e) {
@@ -417,7 +417,7 @@
         part_number: { required: true, maxlength: 100 }
       },
       messages: {
-        company_id: { required: "Please select a company." },
+        company_id: { required: "Please select a vendor." },
         part_number: { required: "Please enter a part number." }
       },
       submitHandler: function (form, e) {

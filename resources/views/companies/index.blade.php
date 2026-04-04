@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', config('app.name') . ' | Companies')
+@section('title', config('app.name') . ' | Our Vendors')
 
 @push('styles')
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
@@ -17,11 +17,11 @@
   <div class="content-header">
     <div class="container-fluid">
       <div class="row mb-2">
-        <div class="col-sm-6"><h1 class="m-0">Companies</h1></div>
+        <div class="col-sm-6"><h1 class="m-0">Our Vendors</h1></div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-            <li class="breadcrumb-item active">Companies</li>
+            <li class="breadcrumb-item active">Our Vendors</li>
           </ol>
         </div>
       </div>
@@ -32,10 +32,10 @@
     <div class="container-fluid">
       <div class="card card-primary card-outline">
         <div class="card-header">
-          <h3 class="card-title">Company List</h3>
+          <h3 class="card-title">Vendor List</h3>
           <div class="card-tools">
             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add-module-popup">
-              <i class="fas fa-plus"></i> Add Company
+              <i class="fas fa-plus"></i> Add Vendor
             </button>
           </div>
         </div>
@@ -44,7 +44,7 @@
             <thead>
               <tr>
                 <th>S.No</th>
-                <th>Company Name</th>
+                <th>Vendor Name</th>
                 <th>Plant Name</th>
                 <th>Contact Person</th>
                 <th>Phone</th>
@@ -63,7 +63,7 @@
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Add Company</h4>
+            <h4 class="modal-title">Add Vendor</h4>
             <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
           </div>
           <div class="modal-body">
@@ -82,8 +82,8 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label>Company Name <span class="text-danger">*</span></label>
-                    <input type="text" name="company_name" id="company_name" class="form-control" placeholder="Enter Company Name">
+                    <label>Vendor Name <span class="text-danger">*</span></label>
+                    <input type="text" name="company_name" id="company_name" class="form-control" placeholder="Enter Vendor Name">
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -178,7 +178,7 @@
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Edit Company</h4>
+            <h4 class="modal-title">Edit Vendor</h4>
             <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
           </div>
           <div class="modal-body">
@@ -199,8 +199,8 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label>Company Name <span class="text-danger">*</span></label>
-                    <input type="text" name="company_name" id="edit_company_name" class="form-control" placeholder="Enter Company Name">
+                    <label>Vendor Name <span class="text-danger">*</span></label>
+                    <input type="text" name="company_name" id="edit_company_name" class="form-control" placeholder="Enter Vendor Name">
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -458,7 +458,7 @@
     // ── Add Company ───────────────────────────────────────────────────
     $('#addCompanyForm').validate({
       rules: { company_name: { required: true, maxlength: 255 } },
-      messages: { company_name: { required: 'Please enter a company name.' } },
+      messages: { company_name: { required: 'Please enter a vendor name.' } },
       submitHandler: function (form, e) {
         e.preventDefault();
         var $btn = $(form).closest('.modal-content').find('button[type="submit"]');
@@ -542,7 +542,7 @@
     // ── Edit Company Submit ───────────────────────────────────────────
     $('#editCompanyForm').validate({
       rules: { company_name: { required: true, maxlength: 255 } },
-      messages: { company_name: { required: 'Please enter a company name.' } },
+      messages: { company_name: { required: 'Please enter a vendor name.' } },
       submitHandler: function (form, e) {
         e.preventDefault();
         var $btn = $('#editSaveBtn');

@@ -159,6 +159,10 @@
                       <td>{{ $employee->bank_name ?: '—' }}</td>
                     </tr>
                     <tr>
+                      <th class="text-muted">Bank Branch</th>
+                      <td>{{ $employee->bank_branch ?: '—' }}</td>
+                    </tr>
+                    <tr>
                       <th class="text-muted">IFSC Code</th>
                       <td>{{ $employee->ifsc_code ? strtoupper($employee->ifsc_code) : '—' }}</td>
                     </tr>

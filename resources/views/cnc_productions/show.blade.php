@@ -176,7 +176,7 @@
                 <th>Date</th>
                 <th>Shift</th>
                 <th>Machine</th>
-                <th>Company</th>
+                <th>Vendor</th>
                 <th>Part</th>
                 <th>Op. Type</th>
                 <th class="text-center">Produced</th>
@@ -308,9 +308,9 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label>Company <span class="text-danger">*</span></label>
+                <label>Vendor <span class="text-danger">*</span></label>
                 <select id="edit_company" class="form-control select2-modal" required>
-                  <option value="">-- Company --</option>
+                  <option value="">-- Vendor --</option>
                   @foreach($companies as $c)
                     <option value="{{ $c->id }}">{{ $c->company_name }}</option>
                   @endforeach
@@ -332,7 +332,7 @@
               <div class="form-group">
                 <label>Part <span class="text-danger">*</span></label>
                 <select id="edit_part" class="form-control select2-modal" required>
-                  <option value="">-- Select Company First --</option>
+                  <option value="">-- Select Vendor First --</option>
                   @foreach($entries->pluck('part')->unique('id')->filter() as $p)
                     <option value="{{ $p->id }}">{{ $p->part_number }}</option>
                   @endforeach

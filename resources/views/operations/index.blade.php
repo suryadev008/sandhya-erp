@@ -44,7 +44,7 @@
               <tr>
                 <th>S.No</th>
                 <th>Operation Name</th>
-                <th>Company</th>
+                <th>Vendor</th>
                 <th>Current Price (₹)</th>
                 <th>Applicable For</th>
                 <th>Status</th>
@@ -76,9 +76,9 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="company_id">Company <span class="text-danger">*</span></label>
+                    <label for="company_id">Vendor <span class="text-danger">*</span></label>
                     <select name="company_id" id="company_id" class="form-control" required>
-                      <option value="">Select Company</option>
+                      <option value="">Select Vendor</option>
                       @foreach($companies as $company)
                         <option value="{{ $company->id }}">{{ $company->company_name }}</option>
                       @endforeach
@@ -159,9 +159,9 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="edit_company_id">Company <span class="text-danger">*</span></label>
+                    <label for="edit_company_id">Vendor <span class="text-danger">*</span></label>
                     <select name="company_id" id="edit_company_id" class="form-control" required>
-                      <option value="">Select Company</option>
+                      <option value="">Select Vendor</option>
                       @foreach($companies as $company)
                         <option value="{{ $company->id }}">{{ $company->company_name }}</option>
                       @endforeach
@@ -263,7 +263,7 @@
           @endforeach
 
           var filterHtml =
-            '<span class="d-inline-block ml-3"><label>Company:&nbsp;<select id="company-filter" class="custom-select custom-select-sm form-control form-control-sm">' + companiesHtml + '</select></label></span>' +
+            '<span class="d-inline-block ml-3"><label>Vendor:&nbsp;<select id="company-filter" class="custom-select custom-select-sm form-control form-control-sm">' + companiesHtml + '</select></label></span>' +
             '<span class="d-inline-block ml-3"><label>Status:&nbsp;<select id="status-filter" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option><option value="1">Active</option><option value="0">Inactive</option></select></label></span>' +
             '<span class="d-inline-block ml-3"><label>Application:&nbsp;<select id="applicable-filter" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option><option value="lathe">Lathe</option><option value="cnc">CNC</option><option value="both">Both</option></select></label></span>' +
             '<span class="d-inline-block ml-2"><button id="clear-filters" class="btn btn-sm btn-outline-secondary" title="Clear Filters"><i class="fas fa-times"></i> Clear</button></span>';
@@ -328,7 +328,7 @@
         applicable_from:{ required: true }
       },
       messages: {
-        company_id:     { required: "Please select a company." },
+        company_id:     { required: "Please select a vendor." },
         operation_name: { required: "Please enter a name." },
         applicable_for: { required: "Please select an applicable type." },
         price:          { required: "Please enter a price.", number: "Please enter a valid number." },
@@ -429,7 +429,7 @@
         applicable_for: { required: true }
       },
       messages: {
-        company_id:     { required: "Please select a company." },
+        company_id:     { required: "Please select a vendor." },
         operation_name: { required: "Please enter a name." },
         applicable_for: { required: "Please select an applicable type." }
       },

@@ -109,12 +109,12 @@ resources/views/dashboard.blade.php
           </div>
         </div>
 
-        {{-- Companies --}}
+        {{-- Vendors --}}
         <div class="col-lg-3 col-md-6 col-6">
           <div class="small-box bg-danger">
             <div class="inner">
               <h3>{{ $totalCompanies }}</h3>
-              <p>Total Companies</p>
+              <p>Total Vendors</p>
               <small>
                 <span class="badge badge-light text-success">{{ $activeCompanies }} Active</span>
                 <span class="badge badge-light text-secondary ml-1">{{ $totalCompanies - $activeCompanies }}
@@ -216,7 +216,7 @@ resources/views/dashboard.blade.php
                     </span>
                   </li>
                   <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span><i class="fas fa-building text-danger mr-2"></i> Total Companies</span>
+                    <span><i class="fas fa-building text-danger mr-2"></i> Total Vendors</span>
                     <span>
                       <span class="badge badge-danger badge-pill">{{ $totalCompanies }}</span>
                       <small class="text-muted ml-1">{{ $activeCompanies }} active</small>
@@ -309,7 +309,7 @@ resources/views/dashboard.blade.php
           @foreach([
             ['url' => '/payroll/employees',  'icon' => 'fas fa-users',        'color' => 'primary', 'label' => 'Employees'],
             ['url' => '/payroll/salaries',   'icon' => 'fas fa-rupee-sign',   'color' => 'success', 'label' => 'Salaries'],
-            ['url' => '/master/companies',  'icon' => 'fas fa-building',     'color' => 'danger',  'label' => 'Companies'],
+            ['url' => '/master/companies',  'icon' => 'fas fa-building',     'color' => 'danger',  'label' => 'Our Vendors'],
             ['url' => '/master/machines',   'icon' => 'fas fa-cog',          'color' => 'warning', 'label' => 'Machines'],
             ['url' => '/master/operations', 'icon' => 'fas fa-wrench',       'color' => 'info',    'label' => 'Operations'],
             ['url' => '/master/parts',      'icon' => 'fas fa-puzzle-piece', 'color' => 'secondary','label' => 'Parts'],

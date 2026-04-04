@@ -128,7 +128,7 @@
               <thead class="thead-light">
                 <tr>
                   <th style="width:40px">#</th>
-                  <th style="min-width:160px">Company <span class="text-danger">*</span></th>
+                  <th style="min-width:160px">Vendor <span class="text-danger">*</span></th>
                   <th style="min-width:150px">Part No. <span class="text-danger">*</span></th>
                   <th style="min-width:140px">Operation Type <span class="text-danger">*</span></th>
                   <th style="width:90px">Produced Qty <span class="text-danger">*</span></th>
@@ -175,7 +175,7 @@
 
     <td>
       <select name="rows[__IDX__][company_id]" class="form-control form-control-sm company-select" required>
-        <option value="">-- Company --</option>
+        <option value="">-- Vendor --</option>
         @foreach($companies as $c)
           <option value="{{ $c->id }}">{{ $c->company_name }}</option>
         @endforeach
@@ -184,7 +184,7 @@
 
     <td>
       <select name="rows[__IDX__][part_id]" class="form-control form-control-sm part-select" disabled required>
-        <option value="">-- Select Company First --</option>
+        <option value="">-- Select Vendor First --</option>
       </select>
     </td>
 
@@ -346,7 +346,7 @@ $(function () {
     var $part = $row.find('.part-select');
 
     $part.html('<option value="">Loading...</option>').prop('disabled', true);
-    if (!cid) { $part.html('<option value="">-- Select Company First --</option>'); return; }
+    if (!cid) { $part.html('<option value="">-- Select Vendor First --</option>'); return; }
 
     $.getJSON(partsUrl, { company_id: cid }, function (parts) {
       var opts = '<option value="">-- Part No. --</option>';

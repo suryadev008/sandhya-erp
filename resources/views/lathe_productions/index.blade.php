@@ -36,25 +36,43 @@
       </div>
       <div class="card-body">
         <table id="empTable" class="table table-bordered table-hover table-sm w-100">
-          <thead>
+          <thead class="thead-light">
             <tr>
               <th>#</th>
               <th>Emp Code</th>
               <th>Name</th>
               <th>Type</th>
               <th>Status</th>
+              <th class="text-center">Register</th>
             </tr>
           </thead>
           <tbody>
             @foreach($employees as $i => $emp)
+            @php
+              $typeColor  = ['lathe' => 'primary', 'cnc' => 'info', 'both' => 'warning'][$emp->employee_type] ?? 'secondary';
+              $statColor  = ['active' => 'success', 'inactive' => 'secondary', 'terminated' => 'danger'][$emp->status] ?? 'secondary';
+            @endphp
             <tr>
               <td>{{ $i + 1 }}</td>
-              <td><a href="{{ route('lathe-productions.show', $emp->id) }}">{{ $emp->emp_code }}</a></td>
+              <td>
+                <a href="{{ route('lathe-productions.show', $emp->id) }}" class="font-weight-bold">
+                  {{ $emp->emp_code }}
+                </a>
+              </td>
               <td>
                 <a href="{{ route('lathe-productions.show', $emp->id) }}">{{ $emp->name }}</a>
               </td>
-              <td>{{ ucfirst($emp->employee_type) }}</td>
-              <td>{{ ucfirst($emp->status) }}</td>
+              <td>
+                <span class="badge badge-{{ $typeColor }}">{{ ucfirst($emp->employee_type) }}</span>
+              </td>
+              <td>
+                <span class="badge badge-{{ $statColor }}">{{ ucfirst($emp->status) }}</span>
+              </td>
+              <td class="text-center">
+                <a href="{{ route('lathe-productions.show', $emp->id) }}" class="btn btn-xs btn-outline-primary">
+                  <i class="fas fa-list mr-1"></i> View
+                </a>
+              </td>
             </tr>
             @endforeach
           </tbody>
@@ -76,7 +94,7 @@
       $('#empTable').DataTable({
         responsive: true,
         order: [[1, 'asc']],
-        columnDefs: [{ orderable: false, targets: 0 }]
+        columnDefs: [{ orderable: false, targets: [0, 5] }]
       });
     });
   </script>
