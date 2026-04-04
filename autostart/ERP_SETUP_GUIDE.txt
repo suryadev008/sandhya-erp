@@ -1,0 +1,99 @@
+==================================================
+     SANDHYA ERP - SETUP & CONFIGURATION GUIDE
+==================================================
+
+HOW TO START THE ERP
+---------------------
+1. Right-click on  START_ERP.bat
+2. Choose "Run as administrator"
+3. A menu will appear:
+      [1] Start ERP   -> Starts everything & opens browser
+      [2] Stop ERP    -> Stops everything cleanly
+      [0] Exit        -> Closes the launcher
+
+4. Do NOT close the blue "ERP Server" window while using ERP.
+5. Open browser at:  http://127.0.0.1:8000
+
+
+--------------------------------------------------
+IF YOU CHANGE YOUR SYSTEM - HOW TO UPDATE PATHS
+--------------------------------------------------
+1. Right-click on  START_ERP.bat
+2. Click "Edit" (opens in Notepad)
+3. Change ONLY the top section (lines 8 to 20):
+
+   -----------------------------------------------
+   set XAMPP_PATH=d:\XAMP
+      -> Change if XAMPP is installed in a different folder
+         Example: set XAMPP_PATH=C:\xampp
+
+   set ERP_PATH=d:\XAMP\htdocs\sandhya_erp
+      -> Change if the ERP project is moved
+         Example: set ERP_PATH=C:\projects\sandhya_erp
+
+   set PHP_EXE=d:\XAMP\php\php.exe
+      -> Change if PHP is in a different location
+         Example: set PHP_EXE=C:\xampp\php\php.exe
+
+   set ERP_PORT=8000
+      -> Change if port 8000 is already used by another app
+         Example: set ERP_PORT=8080
+   -----------------------------------------------
+
+4. Save the file (Ctrl + S)
+5. Run START_ERP.bat again as administrator
+
+
+--------------------------------------------------
+COMMON SCENARIOS
+--------------------------------------------------
+
+Scenario 1: XAMPP installed on C drive
+   set XAMPP_PATH=C:\xampp
+   set ERP_PATH=C:\xampp\htdocs\sandhya_erp
+   set PHP_EXE=C:\xampp\php\php.exe
+
+Scenario 2: XAMPP on D drive (default/current setup)
+   set XAMPP_PATH=d:\XAMP
+   set ERP_PATH=d:\XAMP\htdocs\sandhya_erp
+   set PHP_EXE=d:\XAMP\php\php.exe
+
+Scenario 3: Port 8000 not working, use 8080
+   set ERP_PORT=8080
+   (Then open browser at http://127.0.0.1:8080)
+
+
+--------------------------------------------------
+IMPORTANT NOTES
+--------------------------------------------------
+- Always run START_ERP.bat as ADMINISTRATOR
+  (Right-click -> Run as administrator)
+
+- Do NOT start MySQL from XAMPP Control Panel.
+  MySQL is managed separately via MySQL Workbench.
+  Starting XAMPP MySQL causes crashes.
+
+- The blue "ERP Server" window must stay open
+  while anyone is using the ERP application.
+
+- To completely stop the ERP, use option [2] Stop ERP
+  from the menu. Do not just close windows.
+
+- If browser does not open automatically,
+  manually type this in your browser:
+  http://127.0.0.1:8000
+
+
+--------------------------------------------------
+CURRENT CONFIGURATION (at time of setup)
+--------------------------------------------------
+  XAMPP Path  :  d:\XAMP
+  ERP Path    :  d:\XAMP\htdocs\sandhya_erp
+  PHP Path    :  d:\XAMP\php\php.exe
+  Port        :  8000
+  URL         :  http://127.0.0.1:8000
+
+
+==================================================
+     For support contact your ERP developer.
+==================================================

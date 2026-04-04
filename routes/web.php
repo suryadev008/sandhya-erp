@@ -9,6 +9,21 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+// System Lock Routes
+Route::get('/system-locked', function () {
+    return view('system_locked');
+})->name('system.locked');
+
+Route::post('/system-unlock', function (\Illuminate\Http\Request $request) {
+    $key = config('license.unlock_key');
+    if ($key && $request->input('unlock_key') === $key) {
+        // Session mein unlock mark karo (ek session tak ke liye)
+        session(['system_unlocked' => true]);
+        return redirect('/dashboard');
+    }
+    return redirect()->route('system.locked')->with('unlock_error', 'Galat key hai. Dobara try karein.');
+})->name('system.unlock');
+
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');

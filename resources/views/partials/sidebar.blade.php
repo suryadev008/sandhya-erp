@@ -177,8 +177,8 @@ resources/views/partials/sidebar.blade.php
                 <i class="far fa-circle nav-icon"></i>
                 <p>Attendance</p>
               </a>
-            </li> -->
-            <!-- <li class="nav-item">
+            </li>
+            <li class="nav-item">
               <a href="{{ url('/payroll/payrolls') }}"
                 class="nav-link {{ request()->is('payroll/payrolls*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>

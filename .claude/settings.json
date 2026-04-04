@@ -7,7 +7,13 @@
       "Bash(php -l app/Http/Controllers/CncProductionController.php)",
       "Bash(php -l app/Models/CncProduction.php)",
       "Bash(php -l app/Models/EmployeeOperationRate.php)",
-      "Bash(php -l app/Models/Employee.php)"
+      "Bash(php -l app/Models/Employee.php)",
+      "Read(//d/XAMP/**)",
+      "Bash(\"d:/XAMP/php/php.exe\" -r \"echo 'PHP OK: ' . PHP_VERSION . PHP_EOL;\")",
+      "Bash(del \"d:\\\\XAMP\\\\STOP_ERP.bat\")"
+    ],
+    "additionalDirectories": [
+      "d:\\XAMP"
     ]
   }
 }
