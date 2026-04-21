@@ -334,7 +334,7 @@ resources/views/dashboard.blade.php
 @endsection
 
 @push('scripts')
-  <script src="{{ asset('public/adminlte/plugins/chart.js/Chart.min.js') }}"></script>
+  <script src="{{ asset('adminlte/plugins/chart.js/Chart.min.js') }}"></script>
   <script>
     // Employee Type Chart
     new Chart(document.getElementById('empTypeChart'), {

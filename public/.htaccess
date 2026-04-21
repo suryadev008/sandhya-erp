@@ -4,6 +4,7 @@
     </IfModule>
 
     RewriteEngine On
+    RewriteBase /sandhya_erp/
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .

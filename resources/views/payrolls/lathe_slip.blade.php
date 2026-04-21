@@ -3,7 +3,7 @@
 @section('title', config('app.name') . ' | Lathe Payslip – ' . $employee->name)
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
   <style>
     .summary-card { border-left: 4px solid; border-radius: 4px; }
     .summary-card.lathe  { border-color: #17a2b8; }
@@ -343,7 +343,7 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ asset('public/adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+  <script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
   <script>
   var empId      = {{ $employee->id }};
   var month      = {{ $selectedMonth }};

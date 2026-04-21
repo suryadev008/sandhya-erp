@@ -9,7 +9,7 @@
   <!-- Google Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/fontawesome-free/css/all.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
 
   <style>
     *,
@@ -330,7 +330,7 @@
   <!-- Left Panel -->
   <div class="login-left">
     <!-- Logo -->
-    <img src="{{ asset('public/adminlte/dist/img/AdminLTELogo.png') }}" alt="{{ config('app.name') }} Logo"
+    <img src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}" alt="{{ config('app.name') }} Logo"
       style="width:100px; height:100px; object-fit:contain; border-radius:50%; background:rgba(255,255,255,0.1); padding:14px; margin-bottom:18px; box-shadow:0 0 40px rgba(96,165,250,0.4); position:relative; z-index:2;">
     <div class="brand-logo">
       Sandhya <span>ERP</span>

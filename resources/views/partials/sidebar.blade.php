@@ -7,7 +7,7 @@ resources/views/partials/sidebar.blade.php
 
   <!-- Brand Logo -->
   <a href="{{ url('/') }}" class="brand-link">
-    <img src="{{ asset('public/adminlte/dist/img/AdminLTELogo.png') }}" alt="Sandhya ERP Logo"
+    <img src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}" alt="Sandhya ERP Logo"
       class="brand-image img-circle elevation-3" style="opacity: .8">
     <span class="brand-text font-weight-light">{{ config('app.name', 'Sandhya ERP') }}</span>
   </a>

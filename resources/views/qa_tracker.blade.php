@@ -240,7 +240,7 @@
               <td>2</td>
               <td>Icons not visible on login page</td>
               <td>All Blade Views</td>
-              <td>Changed <code>asset('adminlte/...')</code> → <code>asset('public/adminlte/...')</code></td>
+              <td>Changed <code>asset('adminlte/...')</code> → <code>asset('adminlte/...')</code></td>
               <td><span class="badge badge-success">Fixed</span></td>
             </tr>
             <tr>

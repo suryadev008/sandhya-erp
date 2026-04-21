@@ -3,9 +3,9 @@
 @section('title', config('app.name') . ' | CNC Production Entry')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/select2/css/select2.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
   <style>
     .prod-row td {
       vertical-align: middle !important;
@@ -270,8 +270,8 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ asset('public/adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
-  <script src="{{ asset('public/adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+  <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
+  <script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
   <script>
     $(function () {
 

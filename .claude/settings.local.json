@@ -32,6 +32,9 @@
       "Bash(php \"d:/XAMP/htdocs/sandhya_erp/artisan\" route:list --columns=method,uri,middleware)",
       "Bash(php \"d:/XAMP/htdocs/sandhya_erp/artisan\" route:list --columns=uri,middleware)",
       "Read(//d/XAMP/htdocs/sandhya_erp/**)"
+    ],
+    "additionalDirectories": [
+      "d:\\XAMP\\apache\\conf\\extra"
     ]
   },
   "enableAllProjectMcpServers": true,
