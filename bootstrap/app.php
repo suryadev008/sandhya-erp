@@ -12,8 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'admin'    => \App\Http\Middleware\EnsureAdmin::class,
-            'licensed' => \App\Http\Middleware\CheckSystemLicense::class,
+            'admin'      => \App\Http\Middleware\EnsureAdmin::class,
+            'licensed'   => \App\Http\Middleware\CheckSystemLicense::class,
+            'role'       => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
 
         // Sabhi web routes pe system lock check lagao

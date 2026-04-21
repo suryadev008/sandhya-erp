@@ -29,7 +29,7 @@ class PayrollDataTable
             ->addColumn('per_day', fn($e) => $e->currentSalary ? '₹ ' . number_format($e->currentSalary->per_day, 2) : '<span class="text-muted">—</span>')
             ->addColumn('per_month', fn($e) => $e->currentSalary ? '₹ ' . number_format($e->currentSalary->per_month, 2) : '<span class="text-muted">—</span>')
             ->editColumn('status', fn($e) => ucfirst($e->status))
-            ->addColumn('action', fn($e) => '<a href="' . route('payrolls.show', $e->id) . '" class="btn btn-sm btn-info"><i class="fas fa-history"></i> History</a>')
+            ->addColumn('action', fn($e) => '<a href="' . route('payrolls.show', $e->id) . '" class="btn btn-sm btn-info" title="View History"><i class="fas fa-history"></i> History</a>')
             ->rawColumns(['emp_code', 'name', 'per_day', 'per_month', 'action'])
             ->toJson();
     }

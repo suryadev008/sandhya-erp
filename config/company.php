@@ -10,6 +10,8 @@ return [
     ],
     'industry_types' => [
         'Manufacturing',
+        'Job Work',
+        'Service Provider',
         'IT',
         'Retail',
         'Healthcare',

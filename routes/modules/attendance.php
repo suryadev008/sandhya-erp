@@ -1,5 +1,8 @@
 <?php
 
 use App\Http\Controllers\AttendanceController;
+use Illuminate\Support\Facades\Route;
 
-Route::get('attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+Route::middleware('permission:view attendance')->group(function () {
+    Route::get('attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+});

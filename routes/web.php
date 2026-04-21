@@ -52,31 +52,37 @@ Route::middleware('auth')->group(function () {
 
 /* |--------- | Web Routes |----- */
 
-Route::middleware(['auth', 'admin'])->prefix('master')->group(function () {
+// All protected routes — auth only here, permissions enforced per module file
+Route::middleware('auth')->group(function () {
 
-    // require __DIR__ . '/modules/dashboard.php';
-    require __DIR__ . '/modules/machine_types.php';
-    require __DIR__ . '/modules/machines.php';
-    require __DIR__ . '/modules/operations.php';
-    require __DIR__ . '/modules/parts.php';
-    require __DIR__ . '/modules/companies.php';
-    require __DIR__ . '/modules/contacts.php';
+    Route::get('qa-tracker', fn () => view('qa_tracker'))
+        ->middleware('role:admin')
+        ->name('qa.tracker');
 
-});
+    Route::prefix('master')->group(function () {
+        require __DIR__ . '/modules/roles.php';
+        require __DIR__ . '/modules/users.php';
+        require __DIR__ . '/modules/companies.php';
+        require __DIR__ . '/modules/contacts.php';
+        require __DIR__ . '/modules/machine_types.php';
+        require __DIR__ . '/modules/machines.php';
+        require __DIR__ . '/modules/operations.php';
+        require __DIR__ . '/modules/parts.php';
+    });
 
-Route::middleware(['auth', 'admin'])->prefix('payroll')->group(function () {
+    Route::prefix('payroll')->group(function () {
+        require __DIR__ . '/modules/employees.php';
+        require __DIR__ . '/modules/salaries.php';
+        require __DIR__ . '/modules/attendance.php';
+        require __DIR__ . '/modules/payrolls.php';
+    });
 
-    require __DIR__ . '/modules/employees.php';
-    require __DIR__ . '/modules/salaries.php';
-    require __DIR__ . '/modules/payrolls.php';
-    require __DIR__ . '/modules/attendance.php';
+    require __DIR__ . '/modules/my_company.php';
 
-});
+    Route::prefix('register')->group(function () {
+        require __DIR__ . '/modules/productions.php';
+    });
 
-require __DIR__ . '/modules/my_company.php';
-
-Route::middleware(['auth', 'admin'])->prefix('register')->group(function () {
-    require __DIR__ . '/modules/productions.php';
 });
 
 require __DIR__ . '/auth.php';

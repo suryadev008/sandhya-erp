@@ -34,15 +34,15 @@ class EmployeesDataTable
                 return $emp->joining_date ? $emp->joining_date->format('d-m-Y') : '—';
             })
             ->addColumn('action', function ($emp) {
-                $id = (int) $emp->id;
-                return '
-                    <button type="button" class="btn btn-warning btn-sm edit-btn" data-id="' . $id . '" data-toggle="modal" data-target="#edit-module-popup">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="' . $id . '">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                ';
+                $id   = (int) $emp->id;
+                $html = '';
+                if (auth()->user()->can('edit employees')) {
+                    $html .= '<button type="button" class="btn btn-warning btn-sm edit-btn" data-id="' . $id . '" data-toggle="modal" data-target="#edit-module-popup" title="Edit"><i class="fas fa-edit"></i></button> ';
+                }
+                if (auth()->user()->can('delete employees')) {
+                    $html .= '<button class="btn btn-sm btn-danger delete-btn" data-id="' . $id . '" title="Delete"><i class="fas fa-trash"></i></button>';
+                }
+                return $html ?: '—';
             })
             ->rawColumns(['emp_code', 'name', 'action'])
             ->toJson();

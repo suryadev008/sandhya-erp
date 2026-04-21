@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,10 +9,16 @@
   <!-- Google Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/fontawesome-free/css/all.min.css') }}">
 
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: 'Inter', sans-serif;
@@ -33,27 +40,43 @@
       position: relative;
       overflow: hidden;
     }
+
     .login-left::before {
       content: '';
       position: absolute;
-      width: 400px; height: 400px;
+      width: 400px;
+      height: 400px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(59,130,246,0.25) 0%, transparent 70%);
-      top: -100px; left: -100px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%);
+      top: -100px;
+      left: -100px;
       animation: pulse 6s ease-in-out infinite;
     }
+
     .login-left::after {
       content: '';
       position: absolute;
-      width: 300px; height: 300px;
+      width: 300px;
+      height: 300px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%);
-      bottom: -80px; right: -80px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
+      bottom: -80px;
+      right: -80px;
       animation: pulse 8s ease-in-out infinite reverse;
     }
+
     @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 0.7; }
-      50%       { transform: scale(1.15); opacity: 1; }
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
+
+      50% {
+        transform: scale(1.15);
+        opacity: 1;
+      }
     }
 
     .brand-logo {
@@ -65,10 +88,13 @@
       position: relative;
       z-index: 2;
     }
-    .brand-logo span { color: #60a5fa; }
+
+    .brand-logo span {
+      color: #60a5fa;
+    }
 
     .brand-tagline {
-      color: rgba(255,255,255,0.55);
+      color: rgba(255, 255, 255, 0.55);
       font-size: 0.95rem;
       font-weight: 400;
       letter-spacing: 0.5px;
@@ -93,6 +119,7 @@
       color: #0f172a;
       margin-bottom: 6px;
     }
+
     .login-right p.subtitle {
       color: #64748b;
       font-size: 0.88rem;
@@ -112,6 +139,7 @@
       position: relative;
       margin-bottom: 22px;
     }
+
     .input-wrap .input-icon {
       position: absolute;
       left: 14px;
@@ -121,6 +149,7 @@
       font-size: 0.85rem;
       pointer-events: none;
     }
+
     .input-wrap input {
       width: 100%;
       padding: 11px 14px 11px 38px;
@@ -133,12 +162,19 @@
       transition: border-color 0.2s, box-shadow 0.2s;
       font-family: 'Inter', sans-serif;
     }
+
     .input-wrap input:focus {
       border-color: #3b82f6;
       background: #fff;
-      box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
-    .invalid-feedback { color: #ef4444; font-size: 0.78rem; margin-top: 4px; display: block; }
+
+    .invalid-feedback {
+      color: #ef4444;
+      font-size: 0.78rem;
+      margin-top: 4px;
+      display: block;
+    }
 
     .btn-submit {
       width: 100%;
@@ -154,12 +190,24 @@
       font-family: 'Inter', sans-serif;
       letter-spacing: 0.3px;
     }
-    .btn-submit:hover { opacity: 0.92; transform: translateY(-1px); }
-    .btn-submit:active { transform: translateY(0); }
+
+    .btn-submit:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
 
     .alert-success {
-      background: #ecfdf5; border: 1px solid #86efac; color: #166534;
-      padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 18px;
+      background: #ecfdf5;
+      border: 1px solid #86efac;
+      color: #166534;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 18px;
       line-height: 1.5;
     }
 
@@ -169,25 +217,36 @@
       font-size: 0.84rem;
       color: #64748b;
     }
+
     .back-link a {
       color: #3b82f6;
       font-weight: 500;
       text-decoration: none;
     }
-    .back-link a:hover { text-decoration: underline; }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
 
     .login-footer {
       position: absolute;
       bottom: 20px;
-      left: 0; right: 0;
+      left: 0;
+      right: 0;
       text-align: center;
       font-size: 0.75rem;
       color: #94a3b8;
     }
 
     @media (max-width: 768px) {
-      .login-left { display: none; }
-      .login-right { width: 100%; padding: 40px 28px; }
+      .login-left {
+        display: none;
+      }
+
+      .login-right {
+        width: 100%;
+        padding: 40px 28px;
+      }
     }
   </style>
 </head>
@@ -197,9 +256,8 @@
   <!-- Left Panel -->
   <div class="login-left">
     <!-- Logo -->
-    <img src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}"
-         alt="{{ config('app.name') }} Logo"
-         style="width:100px; height:100px; object-fit:contain; border-radius:50%; background:rgba(255,255,255,0.1); padding:14px; margin-bottom:18px; box-shadow:0 0 40px rgba(96,165,250,0.4); position:relative; z-index:2;">
+    <img src="{{ asset('public/adminlte/dist/img/AdminLTELogo.png') }}" alt="{{ config('app.name') }} Logo"
+      style="width:100px; height:100px; object-fit:contain; border-radius:50%; background:rgba(255,255,255,0.1); padding:14px; margin-bottom:18px; box-shadow:0 0 40px rgba(96,165,250,0.4); position:relative; z-index:2;">
     <div class="brand-logo">
       Sandhya <span>ERP</span>
     </div>
@@ -223,13 +281,8 @@
       <label class="form-label" for="email">Email Address</label>
       <div class="input-wrap">
         <i class="fas fa-envelope input-icon"></i>
-        <input type="email"
-               name="email"
-               id="email"
-               value="{{ old('email') }}"
-               class="{{ $errors->has('email') ? 'is-invalid' : '' }}"
-               placeholder="you@company.com"
-               autofocus>
+        <input type="email" name="email" id="email" value="{{ old('email') }}"
+          class="{{ $errors->has('email') ? 'is-invalid' : '' }}" placeholder="you@company.com" autofocus>
       </div>
       @error('email')
         <span class="invalid-feedback" style="margin-top:-16px; margin-bottom:14px;">{{ $message }}</span>
@@ -250,9 +303,10 @@
   </div>
 
   <!-- jQuery -->
-  <script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/jquery/jquery.min.js') }}"></script>
   <!-- Bootstrap 4 -->
-  <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
 </body>
+
 </html>

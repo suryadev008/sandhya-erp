@@ -521,7 +521,7 @@
   </div>
 
 @push('scripts')
-<script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+<script src="{{ asset('public/adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 <script>
   var Toast = Swal.mixin({
     toast: true, position: 'top-end', showConfirmButton: false,

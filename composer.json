@@ -11,6 +11,7 @@
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^4.2",
+        "spatie/laravel-permission": "^6.25",
         "yajra/laravel-datatables-buttons": "^11.2",
         "yajra/laravel-datatables-html": "11.0",
         "yajra/laravel-datatables-oracle": "11.0"

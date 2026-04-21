@@ -47,14 +47,14 @@ class ContactDataTable
                 return $html;
             })
             ->addColumn('action', function ($c) {
-                return '
-                    <button type="button" class="btn btn-warning btn-sm edit-btn"
-                        data-id="' . $c->id . '" data-toggle="modal" data-target="#edit-module-popup" title="Edit">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger delete-btn ml-1" data-id="' . $c->id . '" title="Delete">
-                        <i class="fas fa-trash"></i>
-                    </button>';
+                $html = '';
+                if (auth()->user()->can('edit contacts')) {
+                    $html .= '<button type="button" class="btn btn-warning btn-sm edit-btn" data-id="' . $c->id . '" data-toggle="modal" data-target="#edit-module-popup" title="Edit"><i class="fas fa-edit"></i></button> ';
+                }
+                if (auth()->user()->can('delete contacts')) {
+                    $html .= '<button class="btn btn-sm btn-danger delete-btn ml-1" data-id="' . $c->id . '" title="Delete"><i class="fas fa-trash"></i></button>';
+                }
+                return $html ?: '—';
             })
             ->rawColumns(['person_name', 'category', 'area', 'phones', 'action'])
             ->toJson();

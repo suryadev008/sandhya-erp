@@ -29,18 +29,21 @@ class MachineDataTable
             ->editColumn('is_active', function ($machine) {
                 return $machine->is_active ? 'Active' : 'Inactive';
             })
-            ->addColumn('action', function ($machine) {
-                return '
-                    <button type="button" class="btn btn-warning btn-sm edit-btn"
-                        data-id="' . $machine->id . '" data-toggle="modal" data-target="#edit-module-popup">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="' . $machine->id . '">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                ';
+            ->editColumn('working', function ($machine) {
+                if (!$machine->working) return '—';
+                return '<span style="white-space:pre-wrap;word-break:break-word;">' . e($machine->working) . '</span>';
             })
-            ->rawColumns(['is_active', 'machine_type_id', 'action'])
+            ->addColumn('action', function ($machine) {
+                $html = '<button type="button" class="btn btn-info btn-sm view-btn" data-id="' . $machine->id . '" data-toggle="modal" data-target="#view-module-popup" title="View"><i class="fas fa-eye"></i></button> ';
+                if (auth()->user()->can('edit machines')) {
+                    $html .= '<button type="button" class="btn btn-warning btn-sm edit-btn" data-id="' . $machine->id . '" data-toggle="modal" data-target="#edit-module-popup" title="Edit"><i class="fas fa-edit"></i></button> ';
+                }
+                if (auth()->user()->can('delete machines')) {
+                    $html .= '<button class="btn btn-sm btn-danger delete-btn" data-id="' . $machine->id . '" title="Delete"><i class="fas fa-trash"></i></button>';
+                }
+                return $html;
+            })
+            ->rawColumns(['is_active', 'machine_type_id', 'working', 'action'])
             ->toJson();
     }
 }

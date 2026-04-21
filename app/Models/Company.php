@@ -12,6 +12,7 @@ class Company extends Model
         'company_name',
         'plant_name',
         'contact_person',
+        'designation_id',
         'contact_phone',
         'address',
         'remark',
@@ -34,5 +35,10 @@ class Company extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    public function designation()
+    {
+        return $this->belongsTo(Designation::class);
     }
 }

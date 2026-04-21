@@ -3,9 +3,9 @@
 @section('title', config('app.name') . ' | Contacts')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
   <style>
     .phone-row { background: #f8f9fa; border-radius: 6px; padding: 6px 8px; margin-bottom: 6px; }
     .phone-row:last-child { margin-bottom: 0; }
@@ -35,9 +35,11 @@
         <div class="card-header">
           <h3 class="card-title"><i class="fas fa-list mr-1"></i> Contact List</h3>
           <div class="card-tools">
+            @can('create contacts')
             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addContactModal">
               <i class="fas fa-plus mr-1"></i> Add Contact
             </button>
+            @endcan
           </div>
         </div>
 
@@ -379,11 +381,11 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
   <script>
   $(function () {
@@ -568,7 +570,7 @@
       $('#editSaveBtn').prop('disabled', true);
 
       $.ajax({
-        url: '/master/contacts/' + id + '/edit',
+        url: window.APP_URL + '/master/contacts/' + id + '/edit',
         success: function (res) {
           if (!res.success) return;
           var d = res.data;
@@ -625,7 +627,7 @@
       btn.html('<i class="fas fa-spinner fa-spin mr-1"></i> Updating...').prop('disabled', true);
 
       $.ajax({
-        url: '/master/contacts/' + id,
+        url: window.APP_URL + '/master/contacts/' + id,
         method: 'POST',
         data: $form.serialize(),
         success: function (res) {
@@ -657,7 +659,7 @@
       }).then(function (result) {
         if (!result.isConfirmed) return;
         $.ajax({
-          url: '/master/contacts/' + id, method: 'DELETE',
+          url: window.APP_URL + '/master/contacts/' + id, method: 'DELETE',
           data: { _token: csrfToken },
           success: function (res) {
             if (res.success) {
@@ -747,7 +749,7 @@
       var name = $.trim($(this).closest('li').find('.cat-rename-input').val());
       if (!name) return;
       $.ajax({
-        url: '/master/contact-categories/' + id, method: 'POST',
+        url: window.APP_URL + '/master/contact-categories/' + id, method: 'POST',
         data: { _token: csrfToken, _method: 'PUT', name: name, is_active: 1 },
         success: function (res) {
           if (res.success) {
@@ -768,7 +770,7 @@
         .then(function (r) {
           if (!r.isConfirmed) return;
           $.ajax({
-            url: '/master/contact-categories/' + id, method: 'POST',
+            url: window.APP_URL + '/master/contact-categories/' + id, method: 'POST',
             data: { _token: csrfToken, _method: 'DELETE' },
             success: function (res) {
               if (res.success) {

@@ -22,15 +22,14 @@ class MachineTypeDataTable
                 return $type->is_active ? 'Active' : 'Inactive';
             })
             ->addColumn('action', function ($type) {
-                return '
-                    <button type="button" class="btn btn-warning btn-sm edit-btn"
-                        data-id="' . $type->id . '" data-toggle="modal" data-target="#edit-module-popup">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="' . $type->id . '">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                ';
+                $html = '';
+                if (auth()->user()->can('edit machine-types')) {
+                    $html .= '<button type="button" class="btn btn-warning btn-sm edit-btn" data-id="' . $type->id . '" data-toggle="modal" data-target="#edit-module-popup" title="Edit"><i class="fas fa-edit"></i></button> ';
+                }
+                if (auth()->user()->can('delete machine-types')) {
+                    $html .= '<button class="btn btn-sm btn-danger delete-btn" data-id="' . $type->id . '" title="Delete"><i class="fas fa-trash"></i></button>';
+                }
+                return $html ?: '—';
             })
             ->rawColumns(['action'])
             ->toJson();

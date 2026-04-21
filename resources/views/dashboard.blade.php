@@ -109,12 +109,12 @@ resources/views/dashboard.blade.php
           </div>
         </div>
 
-        {{-- Vendors --}}
+        {{-- Customer Companies --}}
         <div class="col-lg-3 col-md-6 col-6">
           <div class="small-box bg-danger">
             <div class="inner">
               <h3>{{ $totalCompanies }}</h3>
-              <p>Total Vendors</p>
+              <p>Customer Companies</p>
               <small>
                 <span class="badge badge-light text-success">{{ $activeCompanies }} Active</span>
                 <span class="badge badge-light text-secondary ml-1">{{ $totalCompanies - $activeCompanies }}
@@ -134,198 +134,198 @@ resources/views/dashboard.blade.php
       {{-- ===== Row 2 : Employee Breakdown + Operations & Parts ===== --}}
       <!-- <div class="row">
 
-          {{-- Employee Type Breakdown --}}
-          <div class="col-lg-4 col-md-6">
-            <div class="card card-primary card-outline">
-              <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-chart-pie mr-1"></i> Employee Type (Active)</h3>
-              </div>
-              <div class="card-body">
-                <canvas id="empTypeChart" height="180"></canvas>
-              </div>
-              <div class="card-footer d-flex justify-content-around text-center p-2">
-                <div>
-                  <div class="stat-label">Lathe</div>
-                  <div class="stat-val text-primary">{{ $latheEmployees }}</div>
+              {{-- Employee Type Breakdown --}}
+              <div class="col-lg-4 col-md-6">
+                <div class="card card-primary card-outline">
+                  <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-chart-pie mr-1"></i> Employee Type (Active)</h3>
+                  </div>
+                  <div class="card-body">
+                    <canvas id="empTypeChart" height="180"></canvas>
+                  </div>
+                  <div class="card-footer d-flex justify-content-around text-center p-2">
+                    <div>
+                      <div class="stat-label">Lathe</div>
+                      <div class="stat-val text-primary">{{ $latheEmployees }}</div>
+                    </div>
+                    <div>
+                      <div class="stat-label">CNC</div>
+                      <div class="stat-val text-success">{{ $cncEmployees }}</div>
+                    </div>
+                    <div>
+                      <div class="stat-label">Both</div>
+                      <div class="stat-val text-warning">{{ $bothEmployees }}</div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <div class="stat-label">CNC</div>
-                  <div class="stat-val text-success">{{ $cncEmployees }}</div>
-                </div>
-                <div>
-                  <div class="stat-label">Both</div>
-                  <div class="stat-val text-warning">{{ $bothEmployees }}</div>
-                </div>
               </div>
-            </div>
-          </div>
 
-          {{-- Employee Status --}}
-          <div class="col-lg-4 col-md-6">
-            <div class="card card-success card-outline">
-              <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-user-check mr-1"></i> Employee Status</h3>
-              </div>
-              <div class="card-body">
-                <canvas id="empStatusChart" height="180"></canvas>
-              </div>
-              <div class="card-footer d-flex justify-content-around text-center p-2">
-                <div>
-                  <div class="stat-label">Active</div>
-                  <div class="stat-val text-success">{{ $activeEmployees }}</div>
+              {{-- Employee Status --}}
+              <div class="col-lg-4 col-md-6">
+                <div class="card card-success card-outline">
+                  <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-user-check mr-1"></i> Employee Status</h3>
+                  </div>
+                  <div class="card-body">
+                    <canvas id="empStatusChart" height="180"></canvas>
+                  </div>
+                  <div class="card-footer d-flex justify-content-around text-center p-2">
+                    <div>
+                      <div class="stat-label">Active</div>
+                      <div class="stat-val text-success">{{ $activeEmployees }}</div>
+                    </div>
+                    <div>
+                      <div class="stat-label">Inactive</div>
+                      <div class="stat-val text-secondary">{{ $inactiveEmployees }}</div>
+                    </div>
+                    <div>
+                      <div class="stat-label">Terminated</div>
+                      <div class="stat-val text-danger">{{ $terminatedEmployees }}</div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <div class="stat-label">Inactive</div>
-                  <div class="stat-val text-secondary">{{ $inactiveEmployees }}</div>
-                </div>
-                <div>
-                  <div class="stat-label">Terminated</div>
-                  <div class="stat-val text-danger">{{ $terminatedEmployees }}</div>
-                </div>
               </div>
-            </div>
-          </div>
 
-          {{-- Operations & Parts --}}
-          <div class="col-lg-4 col-md-12">
-            <div class="card card-warning card-outline">
-              <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-tools mr-1"></i> Operations & Parts</h3>
+              {{-- Operations & Parts --}}
+              <div class="col-lg-4 col-md-12">
+                <div class="card card-warning card-outline">
+                  <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-tools mr-1"></i> Operations & Parts</h3>
+                  </div>
+                  <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-wrench text-warning mr-2"></i> Total Operations</span>
+                        <span>
+                          <span class="badge badge-warning badge-pill">{{ $totalOperations }}</span>
+                          <small class="text-muted ml-1">{{ $activeOperations }} active</small>
+                        </span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-puzzle-piece text-info mr-2"></i> Total Parts</span>
+                        <span>
+                          <span class="badge badge-info badge-pill">{{ $totalParts }}</span>
+                          <small class="text-muted ml-1">{{ $activeParts }} active</small>
+                        </span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-cog text-warning mr-2"></i> Total Machines</span>
+                        <span>
+                          <span class="badge badge-warning badge-pill">{{ $totalMachines }}</span>
+                          <small class="text-muted ml-1">{{ $activeMachines }} active</small>
+                        </span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-building text-danger mr-2"></i> Customer Companies</span>
+                        <span>
+                          <span class="badge badge-danger badge-pill">{{ $totalCompanies }}</span>
+                          <small class="text-muted ml-1">{{ $activeCompanies }} active</small>
+                        </span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-rupee-sign text-success mr-2"></i> Salary Assigned</span>
+                        <span>
+                          <span class="badge badge-success badge-pill">{{ $employeesWithSalary }}</span>
+                          @if($employeesWithoutSalary > 0)
+                            <small class="text-warning ml-1"><i class="fas fa-exclamation-triangle"></i> {{ $employeesWithoutSalary }} pending</small>
+                          @endif
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="card-footer text-center">
+                    <a href="{{ url('/master/operations') }}" class="btn btn-sm btn-outline-warning mr-1">Operations</a>
+                    <a href="{{ url('/master/parts') }}" class="btn btn-sm btn-outline-info">Parts</a>
+                  </div>
+                </div>
               </div>
-              <div class="card-body p-0">
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span><i class="fas fa-wrench text-warning mr-2"></i> Total Operations</span>
-                    <span>
-                      <span class="badge badge-warning badge-pill">{{ $totalOperations }}</span>
-                      <small class="text-muted ml-1">{{ $activeOperations }} active</small>
-                    </span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span><i class="fas fa-puzzle-piece text-info mr-2"></i> Total Parts</span>
-                    <span>
-                      <span class="badge badge-info badge-pill">{{ $totalParts }}</span>
-                      <small class="text-muted ml-1">{{ $activeParts }} active</small>
-                    </span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span><i class="fas fa-cog text-warning mr-2"></i> Total Machines</span>
-                    <span>
-                      <span class="badge badge-warning badge-pill">{{ $totalMachines }}</span>
-                      <small class="text-muted ml-1">{{ $activeMachines }} active</small>
-                    </span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span><i class="fas fa-building text-danger mr-2"></i> Total Vendors</span>
-                    <span>
-                      <span class="badge badge-danger badge-pill">{{ $totalCompanies }}</span>
-                      <small class="text-muted ml-1">{{ $activeCompanies }} active</small>
-                    </span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span><i class="fas fa-rupee-sign text-success mr-2"></i> Salary Assigned</span>
-                    <span>
-                      <span class="badge badge-success badge-pill">{{ $employeesWithSalary }}</span>
-                      @if($employeesWithoutSalary > 0)
-                        <small class="text-warning ml-1"><i class="fas fa-exclamation-triangle"></i> {{ $employeesWithoutSalary }} pending</small>
-                      @endif
-                    </span>
-                  </li>
-                </ul>
-              </div>
-              <div class="card-footer text-center">
-                <a href="{{ url('/master/operations') }}" class="btn btn-sm btn-outline-warning mr-1">Operations</a>
-                <a href="{{ url('/master/parts') }}" class="btn btn-sm btn-outline-info">Parts</a>
-              </div>
-            </div>
-          </div>
 
-        </div> -->
+            </div> -->
       {{-- /.Row 2 --}}
 
       {{-- ===== Row 3 : Recent Employees ===== --}}
       <!-- <div class="row">
-          <div class="col-12">
-            <div class="card card-outline card-primary">
-              <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-user-clock mr-1"></i> Recently Added Employees</h3>
-                <div class="card-tools">
-                  <a href="{{ url('/payroll/employees') }}" class="btn btn-primary btn-sm">View All</a>
+              <div class="col-12">
+                <div class="card card-outline card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-user-clock mr-1"></i> Recently Added Employees</h3>
+                    <div class="card-tools">
+                      <a href="{{ url('/payroll/employees') }}" class="btn btn-primary btn-sm">View All</a>
+                    </div>
+                  </div>
+                  <div class="card-body p-0">
+                    <div class="table-responsive">
+                      <table class="table table-sm table-hover mb-0">
+                        <thead class="thead-light">
+                          <tr>
+                            <th>Emp Code</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Mobile</th>
+                            <th>Joining Date</th>
+                            <th>Per Month (₹)</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @forelse($recentEmployees as $emp)
+                          @php
+                            $sc = ['active'=>'success','inactive'=>'secondary','terminated'=>'danger'][$emp->status] ?? 'secondary';
+                          @endphp
+                          <tr>
+                            <td><a href="{{ route('employees.show', $emp->id) }}">{{ $emp->emp_code }}</a></td>
+                            <td><a href="{{ route('employees.show', $emp->id) }}">{{ $emp->name }}</a></td>
+                            <td>{{ ucfirst($emp->employee_type) }}</td>
+                            <td>{{ $emp->mobile_primary }}</td>
+                            <td>{{ $emp->joining_date ? $emp->joining_date->format('d M Y') : '—' }}</td>
+                            <td>
+                              @if($emp->currentSalary)
+                                ₹ {{ number_format($emp->currentSalary->per_month, 2) }}
+                              @else
+                                <span class="text-warning"><i class="fas fa-exclamation-circle"></i> Not set</span>
+                              @endif
+                            </td>
+                            <td><span class="badge badge-{{ $sc }}">{{ ucfirst($emp->status) }}</span></td>
+                          </tr>
+                          @empty
+                          <tr>
+                            <td colspan="7" class="text-center text-muted py-3">No employees found.</td>
+                          </tr>
+                          @endforelse
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="card-body p-0">
-                <div class="table-responsive">
-                  <table class="table table-sm table-hover mb-0">
-                    <thead class="thead-light">
-                      <tr>
-                        <th>Emp Code</th>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Mobile</th>
-                        <th>Joining Date</th>
-                        <th>Per Month (₹)</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      @forelse($recentEmployees as $emp)
-                      @php
-                        $sc = ['active'=>'success','inactive'=>'secondary','terminated'=>'danger'][$emp->status] ?? 'secondary';
-                      @endphp
-                      <tr>
-                        <td><a href="{{ route('employees.show', $emp->id) }}">{{ $emp->emp_code }}</a></td>
-                        <td><a href="{{ route('employees.show', $emp->id) }}">{{ $emp->name }}</a></td>
-                        <td>{{ ucfirst($emp->employee_type) }}</td>
-                        <td>{{ $emp->mobile_primary }}</td>
-                        <td>{{ $emp->joining_date ? $emp->joining_date->format('d M Y') : '—' }}</td>
-                        <td>
-                          @if($emp->currentSalary)
-                            ₹ {{ number_format($emp->currentSalary->per_month, 2) }}
-                          @else
-                            <span class="text-warning"><i class="fas fa-exclamation-circle"></i> Not set</span>
-                          @endif
-                        </td>
-                        <td><span class="badge badge-{{ $sc }}">{{ ucfirst($emp->status) }}</span></td>
-                      </tr>
-                      @empty
-                      <tr>
-                        <td colspan="7" class="text-center text-muted py-3">No employees found.</td>
-                      </tr>
-                      @endforelse
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
+            </div> -->
       {{-- /.Row 3 --}}
 
       {{-- ===== Row 4 : Quick Links ===== --}}
       <!-- <div class="row">
-          <div class="col-12">
-            <h6 class="text-muted font-weight-bold mb-2"><i class="fas fa-bolt mr-1"></i> Quick Links</h6>
-          </div>
-          @foreach([
-            ['url' => '/payroll/employees',  'icon' => 'fas fa-users',        'color' => 'primary', 'label' => 'Employees'],
-            ['url' => '/payroll/salaries',   'icon' => 'fas fa-rupee-sign',   'color' => 'success', 'label' => 'Salaries'],
-            ['url' => '/master/companies',  'icon' => 'fas fa-building',     'color' => 'danger',  'label' => 'Our Vendors'],
-            ['url' => '/master/machines',   'icon' => 'fas fa-cog',          'color' => 'warning', 'label' => 'Machines'],
-            ['url' => '/master/operations', 'icon' => 'fas fa-wrench',       'color' => 'info',    'label' => 'Operations'],
-            ['url' => '/master/parts',      'icon' => 'fas fa-puzzle-piece', 'color' => 'secondary','label' => 'Parts'],
-          ] as $ql)
-          <div class="col-lg-2 col-md-4 col-6 mb-3">
-            <a href="{{ url($ql['url']) }}" class="text-decoration-none quick-link">
-              <div class="card card-{{ $ql['color'] }} card-outline text-center py-3 mb-0 h-100">
-                <div class="card-body p-2">
-                  <i class="{{ $ql['icon'] }} fa-2x text-{{ $ql['color'] }} mb-2"></i>
-                  <div class="font-weight-bold text-dark">{{ $ql['label'] }}</div>
-                </div>
+              <div class="col-12">
+                <h6 class="text-muted font-weight-bold mb-2"><i class="fas fa-bolt mr-1"></i> Quick Links</h6>
               </div>
-            </a>
-          </div>
-          @endforeach
-        </div> -->
+              @foreach([
+                ['url' => '/payroll/employees',  'icon' => 'fas fa-users',        'color' => 'primary', 'label' => 'Employees'],
+                ['url' => '/payroll/salaries',   'icon' => 'fas fa-rupee-sign',   'color' => 'success', 'label' => 'Salaries'],
+                ['url' => '/master/companies',  'icon' => 'fas fa-building',     'color' => 'danger',  'label' => 'Customer Companies'],
+                ['url' => '/master/machines',   'icon' => 'fas fa-cog',          'color' => 'warning', 'label' => 'Machines'],
+                ['url' => '/master/operations', 'icon' => 'fas fa-wrench',       'color' => 'info',    'label' => 'Operations'],
+                ['url' => '/master/parts',      'icon' => 'fas fa-puzzle-piece', 'color' => 'secondary','label' => 'Parts'],
+              ] as $ql)
+              <div class="col-lg-2 col-md-4 col-6 mb-3">
+                <a href="{{ url($ql['url']) }}" class="text-decoration-none quick-link">
+                  <div class="card card-{{ $ql['color'] }} card-outline text-center py-3 mb-0 h-100">
+                    <div class="card-body p-2">
+                      <i class="{{ $ql['icon'] }} fa-2x text-{{ $ql['color'] }} mb-2"></i>
+                      <div class="font-weight-bold text-dark">{{ $ql['label'] }}</div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              @endforeach
+            </div> -->
       {{-- /.Row 4 --}}
 
     </div>
@@ -334,7 +334,7 @@ resources/views/dashboard.blade.php
 @endsection
 
 @push('scripts')
-  <script src="{{ asset('adminlte/plugins/chart.js/Chart.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/chart.js/Chart.min.js') }}"></script>
   <script>
     // Employee Type Chart
     new Chart(document.getElementById('empTypeChart'), {

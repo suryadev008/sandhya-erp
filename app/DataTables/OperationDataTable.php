@@ -39,18 +39,14 @@ class OperationDataTable
             })
             ->editColumn('is_active', fn($op) => $op->is_active ? 'Active' : 'Inactive')
             ->addColumn('action', function ($op) {
-                return '
-                    <button type="button" class="btn btn-warning btn-sm edit-btn"
-                        data-id="' . $op->id . '" data-toggle="modal" data-target="#edit-module-popup">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <a href="' . route('operations.show', $op->id) . '" class="btn btn-info btn-sm" title="View">
-                        <i class="fas fa-eye"></i>
-                    </a>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="' . $op->id . '">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                ';
+                $html = '<a href="' . route('operations.show', $op->id) . '" class="btn btn-info btn-sm" title="View"><i class="fas fa-eye"></i></a> ';
+                if (auth()->user()->can('edit operations')) {
+                    $html .= '<button type="button" class="btn btn-warning btn-sm edit-btn" data-id="' . $op->id . '" data-toggle="modal" data-target="#edit-module-popup" title="Edit"><i class="fas fa-edit"></i></button> ';
+                }
+                if (auth()->user()->can('delete operations')) {
+                    $html .= '<button class="btn btn-sm btn-danger delete-btn" data-id="' . $op->id . '" title="Delete"><i class="fas fa-trash"></i></button>';
+                }
+                return $html;
             })
             ->rawColumns(['operation_name', 'current_price', 'action'])
             ->toJson();

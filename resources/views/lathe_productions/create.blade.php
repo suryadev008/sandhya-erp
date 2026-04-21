@@ -3,9 +3,10 @@
 @section('title', config('app.name') . ' | Lathe Production Entry')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/select2/css/select2.min.css') }}">
+  <link rel="stylesheet"
+    href="{{ asset('public/adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
   <style>
     .prod-row td {
       vertical-align: middle !important;
@@ -127,7 +128,7 @@
               </div>
 
               {{-- Employee type badge --}}
-              <div class="col-md-2">
+              <!-- <div class="col-md-2">
                 <div class="form-group">
                   <label>&nbsp;</label>
                   <div id="empTypeBadge" class="d-none mt-1">
@@ -135,7 +136,7 @@
                     <br><small class="text-muted mt-1 d-block">Rate set per operation</small>
                   </div>
                 </div>
-              </div>
+              </div> -->
 
             </div>
           </div>
@@ -265,8 +266,8 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 
   <script>
     $(function () {

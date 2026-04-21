@@ -10,7 +10,32 @@
       "Bash(sed -i 's|/master/employees|/payroll/employees|g' d:/XAMP/htdocs/sandhya_erp/resources/views/salaries/index.blade.php)",
       "Bash(sed -i 's|/master/employees|/payroll/employees|g' d:/XAMP/htdocs/sandhya_erp/resources/views/employees/index.blade.php)",
       "Bash(sed -i 's|/master/payrolls|/payroll/payrolls|g' d:/XAMP/htdocs/sandhya_erp/resources/views/payrolls/lathe_slip.blade.php)",
-      "Bash(php --version)"
+      "Bash(php --version)",
+      "Bash(find /d/XAMP/htdocs/sandhya_erp/public -type f -name *.js)",
+      "mcp__code-review-graph__semantic_search_nodes_tool",
+      "mcp__code-review-graph__query_graph_tool",
+      "Bash(php -r ' *)",
+      "Bash(composer dump-autoload *)",
+      "Bash(find resources/views -name \"*.blade.php\" -exec sed -i \"s|asset\\('adminlte/|asset\\('public/adminlte/|g\" {} \\\\;)",
+      "Read(//c/xampp/apache/conf/**)",
+      "Read(//d/XAMP/apache/conf/**)",
+      "Bash(php -r 'require '\\\\''d:/XAMP/htdocs/sandhya_erp/vendor/autoload.php'\\\\''; $app = require '\\\\''d:/XAMP/htdocs/sandhya_erp/bootstrap/app.php'\\\\''; echo url\\('\\\\''/'\\\\''\\); echo PHP_EOL; echo url\\('\\\\''master/roles'\\\\''\\);')",
+      "Bash(php \"d:/XAMP/htdocs/sandhya_erp/artisan\" tinker --execute=\"echo url\\('/'\\); echo PHP_EOL; echo url\\('master/roles'\\);\")",
+      "Bash(php \"d:/XAMP/htdocs/sandhya_erp/artisan\" tinker --execute=\"echo url\\('/'\\); echo PHP_EOL; echo url\\('master/roles'\\); echo PHP_EOL; echo rtrim\\(url\\('/'\\), '/'\\);\")",
+      "Bash(php \"d:/XAMP/htdocs/sandhya_erp/artisan\" route:clear)",
+      "Bash(php \"d:/XAMP/htdocs/sandhya_erp/artisan\" config:clear)",
+      "Bash(php \"d:/XAMP/htdocs/sandhya_erp/artisan\" route:list --columns=method,uri,name,middleware)",
+      "Bash(php \"d:/XAMP/htdocs/sandhya_erp/artisan\" route:list)",
+      "Bash(php \"d:/XAMP/htdocs/sandhya_erp/artisan\" cache:clear)",
+      "Bash(php \"d:/XAMP/htdocs/sandhya_erp/artisan\" view:clear)",
+      "Bash(grep 'foreach\\\\|$permissions\\\\|'\\\\''name'\\\\''' d:/XAMP/htdocs/sandhya_erp/database/seeders/RolesAndPermissionsSeeder.php)",
+      "Bash(php \"d:/XAMP/htdocs/sandhya_erp/artisan\" route:list --columns=method,uri,middleware)",
+      "Bash(php \"d:/XAMP/htdocs/sandhya_erp/artisan\" route:list --columns=uri,middleware)",
+      "Read(//d/XAMP/htdocs/sandhya_erp/**)"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "code-review-graph"
+  ]
 }

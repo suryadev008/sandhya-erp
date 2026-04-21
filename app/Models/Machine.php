@@ -11,6 +11,7 @@ class Machine extends Model
         'machine_number',
         'machine_type_id',
         'description',
+        'working',
         'is_active',
     ];
 

@@ -30,14 +30,14 @@ class PartsDataTable
                 return $part->company ? $part->company->company_name : 'N/A';
             })
             ->addColumn('action', function ($part) {
-                return '
-                    <button type="button" class="btn btn-warning btn-sm edit-btn" data-id="' . $part->id . '" data-toggle="modal" data-target="#edit-module-popup">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="' . $part->id . '">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                ';
+                $html = '';
+                if (auth()->user()->can('edit parts')) {
+                    $html .= '<button type="button" class="btn btn-warning btn-sm edit-btn" data-id="' . $part->id . '" data-toggle="modal" data-target="#edit-module-popup" title="Edit"><i class="fas fa-edit"></i></button> ';
+                }
+                if (auth()->user()->can('delete parts')) {
+                    $html .= '<button class="btn btn-sm btn-danger delete-btn" data-id="' . $part->id . '" title="Delete"><i class="fas fa-trash"></i></button>';
+                }
+                return $html ?: '—';
             })
             ->rawColumns(['action'])
             ->toJson();

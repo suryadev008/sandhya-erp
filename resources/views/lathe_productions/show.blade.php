@@ -3,10 +3,10 @@
 @section('title', config('app.name') . ' | ' . $employee->name . ' – Lathe Entries')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/select2/css/select2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
   <style>
     .filter-card .form-group { margin-bottom: 0; }
     .locked-badge { font-size: 12px; }
@@ -383,12 +383,12 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ asset('adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
   <script>
   $(function () {
 
@@ -489,7 +489,7 @@
       btn.html('<i class="fas fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
       var id = $('#edit_id').val();
       $.ajax({
-        url: '/register/lathe-productions/' + id,
+        url: window.APP_URL + '/register/lathe-productions/' + id,
         method: 'POST',
         data: {
           _method:      'PUT',
@@ -529,7 +529,7 @@
       }).then(function (result) {
         if (!result.isConfirmed) return;
         $.ajax({
-          url: '/register/lathe-productions/' + id,
+          url: window.APP_URL + '/register/lathe-productions/' + id,
           method: 'POST',
           data: { _method: 'DELETE', _token: csrfToken },
           success: function () {

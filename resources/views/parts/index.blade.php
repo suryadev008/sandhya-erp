@@ -4,12 +4,12 @@
 
 @push('styles')
   <!-- SweetAlert2 -->
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
   <!-- Select2 -->
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/select2/css/select2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endpush
 
 @section('content')
@@ -35,9 +35,11 @@
         <div class="card-header">
           <h3 class="card-title">Part List</h3>
           <div class="card-tools">
+            @can('create parts')
             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add-module-popup">
               <i class="fas fa-plus"></i> Add Part
             </button>
+            @endcan
           </div>
         </div>
         <div class="card-body">
@@ -196,16 +198,16 @@
 
 @push('scripts')
   <!-- Select2 -->
-  <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
   <!-- jQuery Validation -->
-  <script src="{{ asset('adminlte/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/jquery-validation/additional-methods.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/jquery-validation/additional-methods.min.js') }}"></script>
   <!-- SweetAlert2 -->
-  <script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
   <script>
     $(function () {
@@ -378,7 +380,7 @@
       $('#editPartsForm').data('initial-state', '');
 
       $.ajax({
-        url: '/master/parts/' + id + '/edit',
+        url: window.APP_URL + '/master/parts/' + id + '/edit',
         type: 'GET',
         success: function(response) {
           if(response.success) {
@@ -430,7 +432,7 @@
         submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
 
         $.ajax({
-          url: '/master/parts/' + id,
+          url: window.APP_URL + '/master/parts/' + id,
           type: 'POST', // Form specifies @method('PUT') inside
           data: $(form).serialize(),
           success: function (response) {
@@ -485,7 +487,7 @@
       }).then((result) => {
         if (result.isConfirmed) {
           $.ajax({
-            url: '/master/parts/' + id,
+            url: window.APP_URL + '/master/parts/' + id,
             type: 'DELETE',
             data: { _token: '{{ csrf_token() }}' },
             success: function (response) {

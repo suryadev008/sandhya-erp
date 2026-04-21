@@ -3,9 +3,9 @@
 @section('title', config('app.name') . ' | Machine Types')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
 @endpush
 
 @section('content')
@@ -31,9 +31,11 @@
         <div class="card-header">
           <h3 class="card-title">Machine Type List</h3>
           <div class="card-tools">
+            @can('create machine-types')
             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add-module-popup">
               <i class="fas fa-plus"></i> Add Machine Type
             </button>
+            @endcan
           </div>
         </div>
         <div class="card-body">
@@ -132,12 +134,12 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ asset('adminlte/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-  <script src="{{ asset('adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 
   <script>
     $(function () {
@@ -214,7 +216,7 @@
         $('#editSaveBtn').prop('disabled', true);
         $('#editForm').data('initial-state', '');
         $.ajax({
-          url: '/master/machine-types/' + id + '/edit', type: 'GET',
+          url: window.APP_URL + '/master/machine-types/' + id + '/edit', type: 'GET',
           success: function (r) {
             if (r.success) {
               $('#edit_id').val(r.data.id);
@@ -243,7 +245,7 @@
           var orig = $btn.html();
           $btn.html('<i class="fas fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
           $.ajax({
-            url: '/master/machine-types/' + id, type: 'POST', data: $(form).serialize(),
+            url: window.APP_URL + '/master/machine-types/' + id, type: 'POST', data: $(form).serialize(),
             success: function (r) {
               $btn.html(orig).prop('disabled', true);
               if (r.success) { Toast.fire({ icon: 'success', title: r.message }); $('#edit-module-popup').modal('hide'); $(form).data('initial-state', $(form).serialize()); $('#machine-types-table').DataTable().ajax.reload(); }
@@ -264,7 +266,7 @@
         .then((result) => {
           if (result.isConfirmed) {
             $.ajax({
-              url: '/master/machine-types/' + id, type: 'DELETE', data: { _token: '{{ csrf_token() }}' },
+              url: window.APP_URL + '/master/machine-types/' + id, type: 'DELETE', data: { _token: '{{ csrf_token() }}' },
               success: function (r) { if (r.success) { Toast.fire({ icon: 'success', title: r.message }); $('#machine-types-table').DataTable().ajax.reload(); } },
               error: function (xhr) {
                 var msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Something went wrong.';

@@ -1,0 +1,140 @@
+================================================================
+  Sandhya ERP — Role-Based Access Control (RBAC) Changes
+  Package: spatie/laravel-permission v6.12.0
+  Date: 2026-04-20
+================================================================
+
+----------------------------------------------------------------
+PACKAGE INSTALLED
+----------------------------------------------------------------
+composer require spatie/laravel-permission
+
+----------------------------------------------------------------
+FILES CREATED / MODIFIED
+----------------------------------------------------------------
+
+1. app/Models/User.php
+   - Added: use Spatie\Permission\Traits\HasRoles;
+   - Added: HasRoles in use trait list
+
+2. bootstrap/app.php
+   - Added middleware aliases:
+       'role'               => RoleMiddleware::class
+       'permission'         => PermissionMiddleware::class
+       'role_or_permission' => RoleOrPermissionMiddleware::class
+
+3. app/Http/Controllers/Auth/RegisteredUserController.php
+   - create() : passes $roles to view (only if admin is logged in)
+   - store()  : assigns role securely (only admin can set role,
+                 others default to 'viewer')
+                 Admin stays logged in after registering new user.
+
+4. resources/views/auth/register.blade.php
+   - Added role dropdown (visible only to admin via @if Auth check)
+
+5. app/Http/Controllers/RoleController.php  [NEW]
+   - index()   : list all roles with permissions
+   - store()   : create new role + assign permissions
+   - update()  : rename role + sync permissions
+   - destroy() : delete role ('admin' role protected)
+
+6. routes/modules/roles.php  [NEW]
+   - GET    master/roles           → roles.index
+   - POST   master/roles           → roles.store
+   - PUT    master/roles/{role}    → roles.update
+   - DELETE master/roles/{role}    → roles.destroy
+
+7. routes/web.php
+   - Added: require __DIR__ . '/modules/roles.php';
+     inside ['auth', 'admin'] middleware group
+
+8. resources/views/roles/index.blade.php  [NEW]
+   - Table: all roles + their permissions
+   - Add Role modal (name + permission checkboxes grouped by module)
+   - Edit Role modal (auto-populated on open)
+   - Delete with SweetAlert confirm ('admin' delete button hidden)
+
+9. resources/views/partials/sidebar.blade.php
+   - Added "Roles & Permissions" link under Master menu
+   - Wrapped in @role('admin') ... @endrole (only admin sees it)
+
+10. resources/views/profile/edit.blade.php
+    - Fixed: Auth::user()->role->name  (old/broken)
+    - Fixed: Auth::user()->getRoleNames()->implode(', ') ?: 'N/A'
+
+11. database/seeders/RolesAndPermissionsSeeder.php  [NEW]
+    - Creates 54 permissions across 14 modules
+    - Creates 4 roles with permissions:
+        admin    → all permissions
+        manager  → all except users & roles management
+        operator → productions, attendance, machines, parts, operations
+        viewer   → all view-only permissions
+
+12. config/permission.php  [PUBLISHED from vendor]
+
+13. database/migrations/2026_04_19_191131_create_permission_tables.php
+    [PUBLISHED from vendor — creates 5 tables]
+    Tables: roles, permissions, model_has_roles,
+            model_has_permissions, role_has_permissions
+
+14. deploy.sh  [NEW]
+    - Production deployment script (7 steps)
+
+----------------------------------------------------------------
+ROLES CREATED
+----------------------------------------------------------------
+  admin    → Full access (all 54 permissions)
+  manager  → All except: users & roles management
+  operator → productions, attendance, machines, parts, operations (view+create)
+  viewer   → view-only on all modules
+
+----------------------------------------------------------------
+PERMISSIONS FORMAT
+----------------------------------------------------------------
+  "{action} {module}"
+  Actions  : view, create, edit, delete
+  Modules  : companies, contacts, employees, machines,
+             machine-types, operations, parts, payrolls,
+             productions, salaries, attendance, my-company,
+             users, roles
+
+----------------------------------------------------------------
+USAGE EXAMPLES
+----------------------------------------------------------------
+
+  // Assign role to user
+  $user->assignRole('admin');
+
+  // Protect route
+  Route::middleware(['auth', 'role:admin'])->group(...);
+  Route::middleware(['auth', 'permission:view companies'])->group(...);
+
+  // Blade directives
+  @role('admin') ... @endrole
+  @can('create employees') ... @endcan
+
+  // In controller
+  if (auth()->user()->hasRole('admin')) { ... }
+  if (auth()->user()->can('edit machines')) { ... }
+
+----------------------------------------------------------------
+PRODUCTION DEPLOYMENT COMMANDS
+----------------------------------------------------------------
+  git pull origin main
+  composer install --no-dev --optimize-autoloader
+  php artisan migrate --force
+  php artisan db:seed --class=RolesAndPermissionsSeeder --force
+  php artisan optimize:clear
+  php artisan optimize
+  php artisan package:discover
+
+  // Assign admin role (one-time, replace email)
+  php artisan tinker --execute="App\Models\User::where('email','admin@gmail.com')->first()->assignRole('admin');"
+
+----------------------------------------------------------------
+ROLES MANAGEMENT URL
+----------------------------------------------------------------
+  http://yourdomain.com/master/roles
+  (accessible by admin only)
+
+================================================================

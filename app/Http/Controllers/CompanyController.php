@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Designation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -15,7 +16,8 @@ class CompanyController extends Controller
         if (request()->ajax()) {
             return $dataTable->ajax();
         }
-        return view('companies.index');
+        $designations = Designation::orderBy('name')->get(['id', 'name']);
+        return view('companies.index', compact('designations'));
     }
 
     public function store(Request $request)
@@ -25,13 +27,15 @@ class CompanyController extends Controller
                 'company_name'   => 'required|string|max:255',
                 'plant_name'     => 'nullable|string|max:255',
                 'contact_person' => 'nullable|string|max:255',
+                'designation_id' => 'nullable|exists:designations,id',
                 'contact_phone'  => 'nullable|string|max:50',
                 'address'        => 'nullable|string',
                 'remark'         => 'nullable|string',
                 'gst_no'         => 'nullable|string|size:15|unique:companies,gst_no|regex:/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/',
             ]);
 
-            $validated['is_active'] = $request->has('is_active') ? true : false;
+            $validated['is_active']     = $request->has('is_active') ? true : false;
+            $validated['designation_id'] = $request->filled('designation_id') ? $request->designation_id : null;
             if (!empty($validated['gst_no'])) {
                 $validated['gst_no'] = strtoupper($validated['gst_no']);
             }
@@ -45,7 +49,7 @@ class CompanyController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Vendor created successfully.'
+                'message' => 'Customer Company created successfully.'
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
@@ -64,7 +68,7 @@ class CompanyController extends Controller
 
     public function show(string $id)
     {
-        $company = Company::findOrFail($id);
+        $company = Company::with('designation')->findOrFail($id);
         return view('companies.show', compact('company'));
     }
 
@@ -85,13 +89,15 @@ class CompanyController extends Controller
                 'company_name'   => 'required|string|max:255',
                 'plant_name'     => 'nullable|string|max:255',
                 'contact_person' => 'nullable|string|max:255',
+                'designation_id' => 'nullable|exists:designations,id',
                 'contact_phone'  => 'nullable|string|max:50',
                 'address'        => 'nullable|string',
                 'remark'         => 'nullable|string',
                 'gst_no'         => 'nullable|string|size:15|unique:companies,gst_no,' . $id . '|regex:/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/',
             ]);
 
-            $validated['is_active'] = $request->has('is_active') ? true : false;
+            $validated['is_active']     = $request->has('is_active') ? true : false;
+            $validated['designation_id'] = $request->filled('designation_id') ? $request->designation_id : null;
             if (!empty($validated['gst_no'])) {
                 $validated['gst_no'] = strtoupper($validated['gst_no']);
             }
@@ -111,7 +117,7 @@ class CompanyController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Vendor updated successfully.'
+                'message' => 'Customer Company updated successfully.'
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
@@ -248,7 +254,7 @@ class CompanyController extends Controller
             $company->delete();
             return response()->json([
                 'success' => true,
-                'message' => 'Vendor deleted successfully.'
+                'message' => 'Customer Company deleted successfully.'
             ]);
         } catch (\Exception $e) {
             Log::error('Company delete failed', ['id' => $id, 'error' => $e->getMessage()]);

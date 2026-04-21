@@ -1,19 +1,23 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(grep -r APP_DEBUG d:/XAMP/htdocs/sandhya_erp/ --include=*.php --include=*.env)",
-      "Bash(xargs grep:*)",
-      "Bash(find /d/XAMP/htdocs/sandhya_erp/public -name *.css -type f)",
-      "Bash(php -l app/Http/Controllers/CncProductionController.php)",
-      "Bash(php -l app/Models/CncProduction.php)",
-      "Bash(php -l app/Models/EmployeeOperationRate.php)",
-      "Bash(php -l app/Models/Employee.php)",
-      "Read(//d/XAMP/**)",
-      "Bash(\"d:/XAMP/php/php.exe\" -r \"echo 'PHP OK: ' . PHP_VERSION . PHP_EOL;\")",
-      "Bash(del \"d:\\\\XAMP\\\\STOP_ERP.bat\")"
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|Bash",
+        "command": "code-review-graph update --quiet",
+        "timeout": 5000
+      }
     ],
-    "additionalDirectories": [
-      "d:\\XAMP"
+    "SessionStart": [
+      {
+        "command": "code-review-graph status --json",
+        "timeout": 3000
+      }
+    ],
+    "PreCommit": [
+      {
+        "command": "code-review-graph detect-changes --brief",
+        "timeout": 10000
+      }
     ]
   }
 }

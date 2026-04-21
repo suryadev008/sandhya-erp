@@ -3,7 +3,7 @@
 @section('title', config('app.name') . ' | Payroll – ' . $employee->name)
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 @endpush
 
 @section('content')
@@ -448,7 +448,7 @@
 @endsection
 
 @push('scripts')
-  <script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+  <script src="{{ asset('public/adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 
   <script>
   var empId      = {{ $employee->id }};

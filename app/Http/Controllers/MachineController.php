@@ -27,6 +27,7 @@ class MachineController extends Controller
                 'machine_name'   => 'required|string|max:255',
                 'machine_number' => 'required|string|max:255|unique:machines',
                 'machine_type_id'=> 'required|exists:machine_types,id',
+                'working'        => 'nullable|string',
             ]);
 
             $validated['is_active'] = $request->has('is_active');
@@ -40,7 +41,11 @@ class MachineController extends Controller
         }
     }
 
-    public function show(string $id) {}
+    public function show(string $id)
+    {
+        $machine = Machine::with('machineType')->findOrFail($id);
+        return response()->json(['success' => true, 'data' => $machine]);
+    }
 
     public function edit(string $id)
     {
@@ -57,6 +62,7 @@ class MachineController extends Controller
                 'machine_name'   => 'required|string|max:255',
                 'machine_number' => 'required|string|max:255|unique:machines,machine_number,' . $id,
                 'machine_type_id'=> 'required|exists:machine_types,id',
+                'working'        => 'nullable|string',
             ]);
 
             $validated['is_active'] = $request->has('is_active');
