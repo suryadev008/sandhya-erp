@@ -70,6 +70,7 @@ class UpdateOwnerCompanyRequest extends FormRequest
             // Banks
             'bank_accounts' => 'required|array|min:1',
             'bank_accounts.*.bank_name' => 'required|string',
+            'bank_accounts.*.account_holder_name' => 'required|string|max:255',
             'bank_accounts.*.account_number' => 'required|string',
             'bank_accounts.*.ifsc_code' => ['required', 'regex:/^[A-Z]{4}0[A-Z0-9]{6}$/'],
             'bank_accounts.*.account_type' => 'required|in:current,savings',

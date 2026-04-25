@@ -12,6 +12,7 @@ class OwnerCompanyBankAccount extends Model
     protected $fillable = [
         'owner_company_id',
         'bank_name',
+        'account_holder_name',
         'account_number',
         'ifsc_code',
         'account_type',

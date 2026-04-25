@@ -23,26 +23,23 @@ class CompanyDataTable
 
         return DataTables::eloquent($query->with('designation'))
             ->addIndexColumn()
-            ->editColumn('company_name', function ($company) {
-                return '<a href="' . route('companies.show', $company->id) . '">' . e($company->company_name) . '</a>';
-            })
-            ->addColumn('designation_name', function ($company) {
-                return $company->designation ? e($company->designation->name) : '—';
-            })
-            ->editColumn('is_active', function ($company) {
-                return $company->is_active ? 'Active' : 'Inactive';
-            })
-            ->addColumn('action', function ($company) {
+            ->editColumn('company_name', fn ($c) => '<a href="' . route('companies.show', $c->id) . '">' . e($c->company_name) . '</a>')
+            ->addColumn('designation_name', fn ($c) => $c->designation ? e($c->designation->name) : '—')
+            ->editColumn('is_active', fn ($c) => $c->is_active
+                ? '<span class="badge badge-success">Active</span>'
+                : '<span class="badge badge-secondary">Inactive</span>')
+            ->addColumn('action', function ($c) {
+                $id  = $c->id;
                 $html = '';
                 if (auth()->user()->can('edit companies')) {
-                    $html .= '<button type="button" class="btn btn-warning btn-sm edit-btn" data-id="' . $company->id . '" data-toggle="modal" data-target="#edit-module-popup" title="Edit"><i class="fas fa-edit"></i></button> ';
+                    $html .= "<button type=\"button\" class=\"btn btn-warning btn-sm edit-btn\" data-id=\"{$id}\" data-toggle=\"modal\" data-target=\"#edit-module-popup\" title=\"Edit\"><i class=\"fas fa-edit\"></i></button> ";
                 }
                 if (auth()->user()->can('delete companies')) {
-                    $html .= '<button class="btn btn-sm btn-danger delete-btn" data-id="' . $company->id . '" title="Delete"><i class="fas fa-trash"></i></button>';
+                    $html .= "<button class=\"btn btn-sm btn-danger delete-btn\" data-id=\"{$id}\" title=\"Delete\"><i class=\"fas fa-trash\"></i></button>";
                 }
                 return $html ?: '—';
             })
-            ->rawColumns(['company_name', 'designation_name', 'action'])
+            ->rawColumns(['company_name', 'designation_name', 'is_active', 'action'])
             ->toJson();
     }
 }

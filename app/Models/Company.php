@@ -29,7 +29,8 @@ class Company extends Model
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
+        'is_active'      => 'boolean',
+        'gst_verified_at' => 'datetime',
     ];
 
     public function scopeActive($query)

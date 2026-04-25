@@ -34,7 +34,7 @@
             </div>
         @endif
 
-        <form action="{{ route('my-company.store') }}" method="POST" enctype="multipart/form-data" id="companyForm">
+        <form action="{{ route('my-company.store') }}" method="POST" enctype="multipart/form-data" id="companyForm" novalidate>
             @csrf
             
             <div class="card card-primary card-outline card-outline-tabs">
@@ -177,9 +177,10 @@
                                     <thead class="bg-light">
                                         <tr>
                                             <th>Bank Name *</th>
-                                            <th>Acc Number *</th>
+                                            <th>A/c Holder Name *</th>
+                                            <th>A/c Number *</th>
                                             <th>IFSC Code *</th>
-                                            <th>Acc Type *</th>
+                                            <th>A/c Type *</th>
                                             <th>Branch</th>
                                             <th>SWIFT Code</th>
                                             <th>Primary</th>
@@ -336,10 +337,10 @@
 
 <!-- Templates for JS -->
 <template id="bank-row-template">
-    @include('owner_companies.partials._bank_row', ['index' => '__INDEX__'])
+    @include('owner_companies.partials._bank_row', ['index' => '__INDEX__', 'bank' => null])
 </template>
 <template id="contact-row-template">
-    @include('owner_companies.partials._contact_row', ['index' => '__INDEX__'])
+    @include('owner_companies.partials._contact_row', ['index' => '__INDEX__', 'contact' => null])
 </template>
 
 @endsection

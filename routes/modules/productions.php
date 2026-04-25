@@ -12,12 +12,15 @@ Route::prefix('lathe-productions')->name('lathe-productions.')->group(function (
         Route::get('/parts-by-company',      [LatheProductionController::class, 'getPartsByCompany'])->name('parts-by-company');
         Route::get('/operations-by-company', [LatheProductionController::class, 'getOperationsByCompany'])->name('operations-by-company');
         Route::get('/operation-rate',        [LatheProductionController::class, 'getOperationRate'])->name('operation-rate');
-        Route::get('/{employeeId}',          [LatheProductionController::class, 'show'])->name('show');
     });
 
     Route::middleware('permission:create productions')->group(function () {
         Route::get('/create',   [LatheProductionController::class, 'create'])->name('create');
         Route::post('/store',   [LatheProductionController::class, 'store'])->name('store');
+    });
+
+    Route::middleware('permission:view productions')->group(function () {
+        Route::get('/{employeeId}', [LatheProductionController::class, 'show'])->name('show');
     });
 
     Route::middleware('permission:edit productions')->group(function () {
@@ -36,12 +39,15 @@ Route::prefix('cnc-productions')->name('cnc-productions.')->group(function () {
         Route::get('/',                  [CncProductionController::class, 'index'])->name('index');
         Route::get('/parts-by-company',  [CncProductionController::class, 'getPartsByCompany'])->name('parts-by-company');
         Route::get('/employee-settings', [CncProductionController::class, 'getEmployeeSettings'])->name('employee-settings');
-        Route::get('/{employeeId}',      [CncProductionController::class, 'show'])->name('show');
     });
 
     Route::middleware('permission:create productions')->group(function () {
         Route::get('/create', [CncProductionController::class, 'create'])->name('create');
         Route::post('/store', [CncProductionController::class, 'store'])->name('store');
+    });
+
+    Route::middleware('permission:view productions')->group(function () {
+        Route::get('/{employeeId}', [CncProductionController::class, 'show'])->name('show');
     });
 
     Route::middleware('permission:edit productions')->group(function () {

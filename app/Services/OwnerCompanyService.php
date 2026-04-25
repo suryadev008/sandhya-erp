@@ -46,6 +46,7 @@ class OwnerCompanyService
         foreach ($bankAccounts as $bankData) {
             $company->bankAccounts()->create([
                 'bank_name' => $bankData['bank_name'],
+                'account_holder_name' => $bankData['account_holder_name'],
                 'account_number' => $bankData['account_number'],
                 'ifsc_code' => $bankData['ifsc_code'],
                 'account_type' => $bankData['account_type'],

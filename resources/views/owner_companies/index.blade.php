@@ -77,6 +77,9 @@
                             </a>
                         </li>
                         <li class="nav-item ml-auto d-flex align-items-center pr-3">
+                            <a href="{{ route('my-company.show', $company->id) }}" class="btn btn-info btn-sm mr-1">
+                                <i class="fas fa-eye"></i> View
+                            </a>
                             <button type="button" id="btn-edit" class="btn btn-warning btn-sm">
                                 <i class="fas fa-edit"></i> Edit
                             </button>

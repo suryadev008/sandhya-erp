@@ -6,20 +6,16 @@ use Illuminate\Support\Facades\Route;
 
 // Read
 Route::middleware('permission:view companies')->group(function () {
-    Route::get('companies',                  [CompanyController::class, 'index'])->name('companies.index');
-    Route::get('companies/data',             [CompanyController::class, 'getData'])->name('companies.data');
-    Route::get('companies/{company}',        [CompanyController::class, 'show'])->name('companies.show');
-    Route::get('designations',               [DesignationController::class, 'index'])->name('designations.index');
-    Route::get('companies/verify-gst',       [CompanyController::class, 'verifyGst'])
-        ->middleware('throttle:10,1')
-        ->name('companies.verify-gst');
+    Route::get('companies',           [CompanyController::class, 'index'])->name('companies.index');
+    Route::get('companies/{company}', [CompanyController::class, 'show'])->name('companies.show');
+    Route::get('designations',        [DesignationController::class, 'index'])->name('designations.index');
+    Route::post('companies/verify-gst', [CompanyController::class, 'verifyGst'])->name('companies.verify-gst');
 });
 
 // Create
 Route::middleware('permission:create companies')->group(function () {
-    Route::get('companies/create',  [CompanyController::class, 'create'])->name('companies.create');
-    Route::post('companies',        [CompanyController::class, 'store'])->name('companies.store');
-    Route::post('designations',     [DesignationController::class, 'store'])->name('designations.store');
+    Route::post('companies',      [CompanyController::class, 'store'])->name('companies.store');
+    Route::post('designations',   [DesignationController::class, 'store'])->name('designations.store');
 });
 
 // Edit

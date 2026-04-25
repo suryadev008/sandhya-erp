@@ -7,6 +7,9 @@
         <input type="text" name="bank_accounts[{{ $index }}][bank_name]" class="form-control" value="{{ old('bank_accounts.'.$index.'.bank_name', $bank->bank_name ?? '') }}" placeholder="Bank Name">
     </td>
     <td>
+        <input type="text" name="bank_accounts[{{ $index }}][account_holder_name]" class="form-control" value="{{ old('bank_accounts.'.$index.'.account_holder_name', $bank->account_holder_name ?? '') }}" placeholder="Account Holder Name" required>
+    </td>
+    <td>
         <input type="text" name="bank_accounts[{{ $index }}][account_number]" class="form-control" value="{{ old('bank_accounts.'.$index.'.account_number', $bank->account_number ?? '') }}" placeholder="Account Number">
     </td>
     <td>

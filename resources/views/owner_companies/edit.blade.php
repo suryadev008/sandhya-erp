@@ -34,7 +34,7 @@
             </div>
         @endif
 
-        <form action="{{ route('my-company.update', $company->id) }}" method="POST" enctype="multipart/form-data" id="companyForm">
+        <form action="{{ route('my-company.update', $company->id) }}" method="POST" enctype="multipart/form-data" id="companyForm" novalidate>
             @csrf
             @method('PUT')
             
@@ -178,7 +178,8 @@
                                     <thead class="bg-light">
                                         <tr>
                                             <th>Bank Name *</th>
-                                            <th>Acc Number *</th>
+                                            <th>A/c Holder Name *</th>
+                                            <th>A/c Number *</th>
                                             <th>IFSC Code *</th>
                                             <th>Acc Type *</th>
                                             <th>Branch</th>
@@ -341,10 +342,10 @@
 
 <!-- Templates for JS -->
 <template id="bank-row-template">
-    @include('owner_companies.partials._bank_row', ['index' => '__INDEX__'])
+    @include('owner_companies.partials._bank_row', ['index' => '__INDEX__', 'bank' => null])
 </template>
 <template id="contact-row-template">
-    @include('owner_companies.partials._contact_row', ['index' => '__INDEX__'])
+    @include('owner_companies.partials._contact_row', ['index' => '__INDEX__', 'contact' => null])
 </template>
 
 @endsection

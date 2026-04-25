@@ -64,6 +64,54 @@
                     <th class="text-muted">Remark</th>
                     <td>{{ $company->remark ?: '—' }}</td>
                   </tr>
+                  <tr><th colspan="2" class="bg-light text-primary pt-2 pb-1">GST Details</th></tr>
+                  <tr>
+                    <th class="text-muted">GSTIN</th>
+                    <td>
+                      {{ $company->gst_no ?: '—' }}
+                      @if($company->gst_verified_at)
+                        <span class="badge badge-success ml-1"><i class="fas fa-check-circle"></i> Verified</span>
+                        <small class="text-muted ml-1">{{ $company->gst_verified_at->format('d M Y') }}</small>
+                      @endif
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="text-muted">Trade Name</th>
+                    <td>{{ $company->gst_trade_name ?: '—' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="text-muted">Legal Name</th>
+                    <td>{{ $company->gst_legal_name ?: '—' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="text-muted">GST Status</th>
+                    <td>
+                      @if($company->gst_status)
+                        <span class="badge badge-{{ strtolower($company->gst_status) === 'active' ? 'success' : 'warning' }}">
+                          {{ $company->gst_status }}
+                        </span>
+                      @else —
+                      @endif
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="text-muted">State</th>
+                    <td>{{ $company->gst_state ?: '—' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="text-muted">PAN</th>
+                    <td>{{ $company->gst_pan ?: '—' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="text-muted">Registration Date</th>
+                    <td>{{ $company->gst_registration_date ?: '—' }}</td>
+                  </tr>
+                  <tr>
+                    <th class="text-muted">Business Type</th>
+                    <td>{{ $company->gst_business_type ?: '—' }}</td>
+                  </tr>
+
+                  <tr><th colspan="2" class="bg-light pt-2 pb-1 text-muted" style="font-size:11px">TIMESTAMPS</th></tr>
                   <tr>
                     <th class="text-muted">Created At</th>
                     <td>{{ $company->created_at->format('d M Y, h:i A') }}</td>
@@ -75,10 +123,16 @@
                 </tbody>
               </table>
             </div>
-            <div class="card-footer">
+            <div class="card-footer d-flex justify-content-between">
               <a href="{{ route('companies.index') }}" class="btn btn-secondary btn-sm">
                 <i class="fas fa-arrow-left"></i> Back to List
               </a>
+              @can('edit companies')
+              <button class="btn btn-warning btn-sm edit-btn" data-id="{{ $company->id }}"
+                data-toggle="modal" data-target="#edit-module-popup">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              @endcan
             </div>
           </div>
         </div>
